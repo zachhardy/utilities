@@ -151,23 +151,6 @@ def plot_power(self: "SimulationReader") -> None:
     plt.tight_layout()
 
 
-def _plot_cell_centered_data(self: "SimulationReader",
-                             data: ndarray, labels: List[str] = None,
-                             title: str = None, ylabel: str = None) -> None:
-
-
-    plt.figure()
-    plt.title("" if title is None else title)
-    plt.xlabel("z [cm]")
-    plt.ylabel("" if ylabel is None else ylabel)
-
-    for t, time in enumerate(times):
-        plt.plot(z, data[t], label=labels[t])
-    plt.grid(True)
-    plt.legend()
-    plt.tight_layout()
-
-
 @staticmethod
 def _format_subplots(n_plots: int) -> Tuple[int, int]:
     """Determine the number of rows and columns for subplots.

@@ -29,16 +29,17 @@ class SimulationReader:
                            _interpolate,
                            _validate_times)
 
+    from ._plotting import (plot_power,
+                            plot_power_densities,
+                            plot_temperatures,
+                            _format_subplots)
+
     from ._plot_flux_moments import (plot_flux_moments,
                                      _plot_1d_flux_moments,
                                      _plot_2d_flux_moments)
 
     from ._plot_precursors import plot_precursors
 
-    from ._plotting import (plot_power,
-                            plot_power_densities,
-                            plot_temperatures,
-                            _format_subplots)
 
     def __init__(self, path: str) -> None:
         if not os.path.isdir(path):
