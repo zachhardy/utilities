@@ -16,11 +16,13 @@ class SimulationReader:
 
     from ._read import read_simulation_data
 
-    from ._getters import (get_phi_m, get_phi_mg,
+    from ._getters import (get_flux_moment, get_group_flux_moment,
                            get_precursor_j)
 
     from ._plotting import (plot_power,
-                            plot_flux_moment,
+                            plot_flux_moments,
+                            _plot_1d_flux_moments,
+                            _plot_2d_flux_moments,
                             plot_power_density,
                             plot_temperature,
                             plot_precursors)

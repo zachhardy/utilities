@@ -6,8 +6,8 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def get_phi_m(self: "SimulationReader",
-              moment: int, time: float) -> ndarray:
+def get_flux_moment(self: "SimulationReader",
+                    moment: int, time: float) -> ndarray:
     """Get flux moment `m` at time `t`.
 
     Parameters
@@ -34,8 +34,8 @@ def get_phi_m(self: "SimulationReader",
     return vals
 
 
-def get_phi_mg(self: "SimulationReader", moment: int,
-               group: int, time: float) -> ndarray:
+def get_group_flux_moment(self: "SimulationReader", moment: int,
+                          group: int, time: float) -> ndarray:
     """Get group `g` flux moment `m` and time `t`.
 
     Parameters
