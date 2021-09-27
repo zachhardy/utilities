@@ -26,7 +26,8 @@ class SimulationReader:
                            get_precursor_species,
                            get_nodes,
                            get_cell_centers,
-                           _interpolate)
+                           _interpolate,
+                           _validate_times)
 
     from ._plot_flux_moments import (plot_flux_moments,
                                      _plot_1d_flux_moments,
@@ -103,11 +104,3 @@ class SimulationReader:
             self.dim = 2
         else:
             self.dim = 3
-
-    def _validate_times(self, times: List[float]) -> List[float]:
-        if times is None:
-            times = [self.times[0], self.times[-1]]
-        if isinstance(times, float):
-            times = [times]
-        return times
-

@@ -137,11 +137,6 @@ def _interpolate(self: "SimulationReader",
     ndarray
         The interpolated data.
     """
-    for time in times:
-        if not self.times[0] <= time <= self.times[-1]:
-            raise ValueError(
-                "Provided time is outside of simulation bounds.")
-
     vals = np.zeros((len(times), data.shape[1]))
     for t, time in enumerate(times):
         dt = np.diff(self.times)[0]
@@ -151,4 +146,24 @@ def _interpolate(self: "SimulationReader",
             w = [1.0, 0.0]
         vals[t] = w[0]*data[i[0]] + w[1]*data[i[1]]
     return vals
+
+
+def _validate_times(self: "SimulationReader",
+                    times: List[float]) -> List[float]:
+    """Ensure the plotting times are valid.
+
+    Parameters
+    ----------
+    times : List[float]
+        The times to validate
+    """
+    if times is None:
+        times = [self.times[0], self.times[-1]]
+    if isinstance(times, float):
+        times = [times]
+    for time in times:
+        if not self.times[0] <= time <= self.times[-1]:
+            raise ValueError(
+                "A specified time falls outside of simulation bounds.")
+    return times
 
