@@ -166,3 +166,28 @@ def _plot_cell_centered_data(self: "SimulationReader",
     plt.grid(True)
     plt.legend()
     plt.tight_layout()
+
+
+@staticmethod
+def _format_subplots(n_plots: int) -> Tuple[int, int]:
+    """Determine the number of rows and columns for subplots.
+
+    Parameters
+    ----------
+    n_plots : int
+        The number of subplots that will be used.
+
+    """
+    n_rows, n_cols = 1, 1
+    if n_plots < 4:
+        n_rows, n_cols = 1, 3
+    elif 4 <= n_plots < 9:
+        ref = int(np.ceil(np.sqrt((n_plots))))
+        n_rows = n_cols = ref
+        for n in range(1, n_cols + 1):
+            if n * n_cols >= n_plots:
+                n_rows = n
+                break
+    else:
+        raise AssertionError("Maximum number of plots is 9.")
+    return n_rows, n_cols
