@@ -103,24 +103,6 @@ def get_precursor_species(self: "SimulationReader",
     return vals
 
 
-def get_nodes(self: "SimulationReader") -> Grid:
-    if self.dim == 1:
-        return [p.z for p in self.nodes]
-    elif self.dim == 2:
-        x = [p.x for p in self.nodes]
-        y = [p.y for p in self.nodes]
-        return np.meshgrid(np.unique(x), np.unique(y))
-
-
-def get_cell_centers(self: "SimulationReader") -> Grid:
-    if self.dim == 1:
-        return [p.z for p in self.centroids]
-    elif self.dim == 2:
-        x = [p.x for p in self.centroids]
-        y = [p.y for p in self.centroids]
-        return np.meshgrid(np.unique(x), np.unique(y))
-
-
 def _interpolate(self: "SimulationReader",
                  times: List[float], data: ndarray) -> ndarray:
     """Interpolate at a specified time.

@@ -24,8 +24,6 @@ class SimulationReader:
     from ._getters import (get_flux_moment,
                            get_group_flux_moment,
                            get_precursor_species,
-                           get_nodes,
-                           get_cell_centers,
                            _interpolate,
                            _validate_times)
 
