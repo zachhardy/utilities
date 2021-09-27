@@ -25,7 +25,8 @@ class SimulationReader:
                            get_group_flux_moment,
                            get_precursor_species,
                            get_nodes,
-                           get_cell_centers)
+                           get_cell_centers,
+                           _interpolate)
 
     from ._plot_flux_moments import (plot_flux_moments,
                                      _plot_1d_flux_moments,
@@ -90,36 +91,6 @@ class SimulationReader:
         self.precursors = []
         self.temperature = []
         self.power_density = []
-
-    def _interpolate(self, times: float, data: ndarray) -> ndarray:
-        """Interpolate at a specified time.
-
-        Parameters
-        ----------
-        times : List[float]
-            The desired times to obtain data for.
-        data : ndarray (n_steps, n_nodes)
-            The data to interpolate.
-
-        Returns
-        -------
-        ndarray
-            The interpolated data.
-        """
-        for time in times:
-            if not self.times[0] <= time <= self.times[-1]:
-                raise ValueError(
-                    "Provided time is outside of simulation bounds.")
-
-        vals = np.zeros((len(times), data.shape[1]))
-        for t, time in enumerate(times):
-            dt = np.diff(self.times)[0]
-            i = [int(np.floor(time/dt)), int(np.ceil(time/dt))]
-            w = [i[1] - time/dt, time/dt - i[0]]
-            if i[0] == i[1]:
-                w = [1.0, 0.0]
-            vals[t] = w[0]*data[i[0]] + w[1]*data[i[1]]
-        return vals
 
     def _determine_dimension(self) -> None:
         """Determine the spatial dimension.

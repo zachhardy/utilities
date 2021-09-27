@@ -119,3 +119,36 @@ def get_cell_centers(self: "SimulationReader") -> Grid:
         x = [p.x for p in self.centroids]
         y = [p.y for p in self.centroids]
         return np.meshgrid(np.unique(x), np.unique(y))
+
+
+def _interpolate(self: "SimulationReader",
+                 times: List[float], data: ndarray) -> ndarray:
+    """Interpolate at a specified time.
+
+    Parameters
+    ----------
+    times : List[float]
+        The desired times to obtain data for.
+    data : ndarray (n_steps, n_nodes)
+        The data to interpolate.
+
+    Returns
+    -------
+    ndarray
+        The interpolated data.
+    """
+    for time in times:
+        if not self.times[0] <= time <= self.times[-1]:
+            raise ValueError(
+                "Provided time is outside of simulation bounds.")
+
+    vals = np.zeros((len(times), data.shape[1]))
+    for t, time in enumerate(times):
+        dt = np.diff(self.times)[0]
+        i = [int(np.floor(time/dt)), int(np.ceil(time/dt))]
+        w = [i[1] - time/dt, time/dt - i[0]]
+        if i[0] == i[1]:
+            w = [1.0, 0.0]
+        vals[t] = w[0]*data[i[0]] + w[1]*data[i[1]]
+    return vals
+
