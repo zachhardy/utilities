@@ -96,7 +96,9 @@ def _plot_2d_flux_moments(self: "SimulationReader",
     times : List[float
         The times to plot the flux moment at.
     """
-    X, Y = self.get_nodes()
+    x = np.array([p.x for p in self.nodes])
+    y = np.array([p.y for p in self.nodes])
+    X, Y = np.meshgrid(np.unique(x), np.unique(y))
 
     # Subplot dimentsions
     n_rows, n_cols = self._format_subplots(len(times))
