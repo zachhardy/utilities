@@ -51,6 +51,9 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
     -------
     ndarray (n_nodes,)
     """
+    assert moment < self.n_moments
+    assert group < self.n_groups
+
     npc = self.nodes_per_cell
     vals = np.zeros(self.n_nodes)
     tmp = self._interpolate(time, self.flux_moments)

@@ -29,7 +29,7 @@ def plot_flux_moments(self: "SimulationReader",
     # Get the groups to plot
     if groups is None:
         groups = [0]
-    if groups == "all":
+    if groups == -1:
         groups = [g for g in range(self.n_groups)]
     if isinstance(groups, int):
         groups = [groups]
@@ -85,7 +85,7 @@ def _plot_1d_flux_moments(self: "SimulationReader",
             label = f"Time = {time:.3f} sec"
             ax.plot(z, phi[t], label=label)
         ax.legend()
-        ax.grid()
+        ax.grid(True)
         fig.tight_layout()
 
 
