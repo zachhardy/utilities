@@ -59,6 +59,8 @@ class SimulationReader:
 
         self.times: ndarray = []
         self.powers: ndarray = []
+        self.average_powers: ndarray = []
+        self.average_temperatures: ndarray = []
 
         self.material_ids: List[int] = []
         self.centroids: List[Vector] = []
@@ -66,8 +68,8 @@ class SimulationReader:
 
         self.flux_moments: ndarray = []
         self.precursors: ndarray = []
-        self.temperature: ndarray = []
-        self.power_density: ndarray = []
+        self.temperatures: ndarray = []
+        self.power_densities: ndarray = []
 
     def initialize_storage(self) -> None:
         """Size all data vectors based on the macro-quantities.
@@ -76,22 +78,15 @@ class SimulationReader:
         M, G, P = self.n_moments, self.n_groups, self.max_precursors
         self.times = np.empty(T, dtype=float)
         self.powers = np.empty(T, dtype=float)
+        self.average_powers = np.empty(T, dtype=float)
+        self.average_temperatures = np.empty(T, dtype=float)
         self.flux_moments = np.empty((T, N * M * G), dtype=float)
         self.precursors = np.empty((T, C * P), dtype=float)
-        self.temperature = np.empty((T, C), dtype=float)
-        self.power_density = np.empty((T, C), dtype=float)
+        self.temperatures = np.empty((T, C), dtype=float)
+        self.power_densities = np.empty((T, C), dtype=float)
 
     def clear(self) -> None:
-        self.material_ids.clear()
-        self.centroids.clear()
-        self.nodes.clear()
-
-        self.times = []
-        self.powers = []
-        self.flux_moments = []
-        self.precursors = []
-        self.temperature = []
-        self.power_density = []
+        self.__init__(self.path)
 
     def _determine_dimension(self) -> None:
         """Determine the spatial dimension.

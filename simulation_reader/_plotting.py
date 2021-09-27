@@ -21,7 +21,7 @@ def plot_power_densities(self: "SimulationReader",
     times = self._validate_times(times)
 
     # Get power densities
-    P = self._interpolate(times, self.power_density)
+    P = self._interpolate(times, self.power_densities)
 
     # Define labels for plots
     labels = [f"Time {t:.3f} sec" for t in times]
@@ -71,7 +71,7 @@ def plot_temperatures(self: "SimulationReader",
     times = self._validate_times(times)
 
     # Get power densities
-    T = self._interpolate(times, self.temperature)
+    T = self._interpolate(times, self.temperatures)
 
     # Define labels for plots
     labels = [f"Time {t:.3f} sec" for t in times]
@@ -109,7 +109,8 @@ def plot_temperatures(self: "SimulationReader",
         fig.tight_layout()
 
 
-def plot_power(self: "SimulationReader") -> None:
+def plot_power(self: "SimulationReader", mode: int = 0,
+               log_scale: bool = True) -> None:
     """Plot the system power as a function of time.
 
     In special cases, this routine plots reference lines to
@@ -138,8 +139,10 @@ def plot_power(self: "SimulationReader") -> None:
         axs += [ax]
 
     else:
+        p = self.powers if mode == 0 else self.average_powers
         ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.plot(self.times, self.powers, "-*b", label="Power")
+        plotter = ax.plot if not log_scale else ax.semilogy
+        plotter(self.times, p, "-*b", label="Power")
         axs += [ax]
 
     for ax in axs:

@@ -25,11 +25,13 @@ def read_simulation_data(self: "SimulationReader") -> None:
 
         # Open snapshot file
         with open(path, mode="rb") as f:
-            f.read(1499)  # skip header
+            f.read(1549)  # skip header
 
             step = self.read_uint64_t(f)
             time = self.read_double(f)
             power = self.read_double(f)
+            avg_power = self.read_double(f)
+            avg_temperature = self.read_double(f)
 
             n_cells = self.read_uint64_t(f)
             n_nodes = self.read_uint64_t(f)
@@ -61,6 +63,8 @@ def read_simulation_data(self: "SimulationReader") -> None:
             # Set time and power
             self.times[step] = time
             self.powers[step] = power
+            self.average_powers[step] = avg_power
+            self.average_temperatures[step] = avg_temperature
 
             n_blocks = self.read_unsigned_int(f)
 
@@ -129,14 +133,14 @@ def read_simulation_data(self: "SimulationReader") -> None:
             n_records = self.read_uint64_t(f)
             for dof in range(n_records):
                 cell_id = self.read_uint64_t(f)
-                self.temperature[step, cell_id] = self.read_double(f)
+                self.temperatures[step, cell_id] = self.read_double(f)
 
             # Parse power density
             self.read_unsigned_int(f)  # skip record type
             n_records = self.read_uint64_t(f)
             for dof in range(n_records):
                 cell_id = self.read_uint64_t(f)
-                self.power_density[step, cell_id] = self.read_double(f)
+                self.power_densities[step, cell_id] = self.read_double(f)
 
     self._determine_dimension()
 
