@@ -52,6 +52,16 @@ class Database:
         return len(self._grid)
 
     @property
+    def n_parameters(self) -> int:
+        """Get the number of parameters.
+
+        Returns
+        -------
+        int
+        """
+        return self._parameters.shape[1]
+
+    @property
     def n_variables(self) -> int:
         """Get the number of variables.
 
@@ -228,7 +238,7 @@ class Database:
             self.parse_grid(datapath)
 
         # ======================================== Go through directory
-        skip = ["times", "grid", ".pdf", "power"]
+        skip = ["times", "grid", ".pdf", "power", "k_eff"]
         for var in sorted(os.listdir(datapath)):
             if any([name in var for name in skip]):
                 continue
