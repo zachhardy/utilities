@@ -59,8 +59,8 @@ def plot_power_densities(self: "SimulationReader",
         fig.tight_layout()
 
 
-def plot_temperatures(self: "SimulationReader",
-                      times: List[float]) -> None:
+def plot_temperature_profiles(self: "SimulationReader",
+                              times: List[float]) -> None:
     """Plot temperatures at various times.
 
     Parameters
@@ -110,11 +110,21 @@ def plot_temperatures(self: "SimulationReader",
 
 
 def plot_power(self: "SimulationReader", mode: int = 0,
-               log_scale: bool = True) -> None:
-    """Plot the system power as a function of time.
+               log_scale: bool = False) -> None:
+    """Plot the power as a function of time.
 
     In special cases, this routine plots reference lines to
     show agreement with expected results.
+
+    Parameters
+    ----------
+    mode : int, default 0
+        Flag for plotting system power or average power density.
+        If 0, system power is plotted.
+        If 1, the average power density is plotted.
+        If 2, the peak power density is plotted.
+    log_scale : bool, default False
+        Flag for plotting linear or log scale on the y-axis.
     """
     fig: Figure = plt.figure()
     axs: List[Axes] = []
@@ -139,19 +149,47 @@ def plot_power(self: "SimulationReader", mode: int = 0,
         axs += [ax]
 
     else:
-        p = self.powers if mode == 0 else self.average_powers
+        p = self.powers
+        if mode == 1:
+            p = self.average_powers
+        elif mode == 2:
+            p = self.peak_powers
+
         ax: Axes = fig.add_subplot(1, 1, 1)
         plotter = ax.plot if not log_scale else ax.semilogy
         plotter(self.times, p, "-*b", label="Power")
         axs += [ax]
 
     for ax in axs:
-        ax.set_xlabel("Time (sec)")
-        ax.set_ylabel("Power (arb. units)")
+        ax.set_xlabel("Time [sec]")
+        ax.set_ylabel("Power [arb. units]")
         ax.legend()
         ax.grid(True)
+    fig.tight_layout()
 
-    plt.tight_layout()
+
+def plot_temperatures(self: "SimulationReader",
+                      mode: int = 0) -> None:
+    """Plot the temperature as a function of time.
+
+    Parameters
+    ----------
+    mode : int, default 0
+        Flag for plotting average or peak temperatures.
+        If 0, average temperatures are plotted.
+        If 1, peak temperatures are plotted.
+    """
+    T = self.average_temperatures
+    if mode == 1:
+        T = self.peak_temperatures
+
+    fig: Figure = plt.figure()
+    ax: Axes = fig.add_subplot(1, 1, 1)
+    ax.set_xlabel("Time [sec]")
+    ax.set_ylabel("Temperature [K]")
+    ax.plot(self.times, T, "-*b")
+    ax.grid(True)
+    fig.tight_layout()
 
 
 @staticmethod

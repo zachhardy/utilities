@@ -28,8 +28,9 @@ class SimulationReader:
                            _validate_times)
 
     from ._plotting import (plot_power,
-                            plot_power_densities,
                             plot_temperatures,
+                            plot_power_densities,
+                            plot_temperature_profiles,
                             _format_subplots)
 
     from ._plot_flux_moments import (plot_flux_moments,
@@ -59,7 +60,9 @@ class SimulationReader:
 
         self.times: ndarray = []
         self.powers: ndarray = []
+        self.peak_powers: ndarray = []
         self.average_powers: ndarray = []
+        self.peak_temperatures: ndarray = []
         self.average_temperatures: ndarray = []
 
         self.material_ids: List[int] = []
@@ -76,10 +79,14 @@ class SimulationReader:
         """
         T, N, C = self.n_snapshots, self.n_nodes, self.n_cells
         M, G, P = self.n_moments, self.n_groups, self.max_precursors
+
         self.times = np.empty(T, dtype=float)
         self.powers = np.empty(T, dtype=float)
+        self.peak_powers = np.empty(T, dtype=float)
         self.average_powers = np.empty(T, dtype=float)
+        self.peak_temperatures = np.empty(T, dtype=float)
         self.average_temperatures = np.empty(T, dtype=float)
+
         self.flux_moments = np.empty((T, N * M * G), dtype=float)
         self.precursors = np.empty((T, C * P), dtype=float)
         self.temperatures = np.empty((T, C), dtype=float)

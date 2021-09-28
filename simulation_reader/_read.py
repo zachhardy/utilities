@@ -25,13 +25,15 @@ def read_simulation_data(self: "SimulationReader") -> None:
 
         # Open snapshot file
         with open(path, mode="rb") as f:
-            f.read(1549)  # skip header
+            f.read(1649)  # skip header
 
             step = self.read_uint64_t(f)
             time = self.read_double(f)
             power = self.read_double(f)
+            peak_power = self.read_double(f)
             avg_power = self.read_double(f)
-            avg_temperature = self.read_double(f)
+            peak_temp = self.read_double(f)
+            avg_temp = self.read_double(f)
 
             n_cells = self.read_uint64_t(f)
             n_nodes = self.read_uint64_t(f)
@@ -63,8 +65,10 @@ def read_simulation_data(self: "SimulationReader") -> None:
             # Set time and power
             self.times[step] = time
             self.powers[step] = power
+            self.peak_powers[step] = peak_power
             self.average_powers[step] = avg_power
-            self.average_temperatures[step] = avg_temperature
+            self.peak_temperatures[step] = peak_temp
+            self.average_temperatures[step] = avg_temp
 
             n_blocks = self.read_unsigned_int(f)
 
