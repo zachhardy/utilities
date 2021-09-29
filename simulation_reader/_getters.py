@@ -22,7 +22,7 @@ def get_flux_moment(self: "SimulationReader",
 
     Returns
     -------
-    ndarray (n_nodes * n_groups)
+    ndarray (n_times, n_nodes * n_groups)
     """
     assert moment < self.n_moments
     assert group < self.n_groups
@@ -50,14 +50,14 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
     ----------
     moment : int
         The flux moment index.
-    group : int
-        The group index.
-    time : float
-        The time to get the flux moment at.
+    groups : List[int]
+        The group indices to plot.
+    times : List[float]
+        The times to get the group flux moment at.
 
     Returns
     -------
-    ndarray (n_nodes,)
+    ndarray (n_times, n_nodes)
     """
     assert moment < self.n_moments
     assert group < self.n_groups
@@ -85,8 +85,12 @@ def get_precursor_species(self: "SimulationReader",
     ----------
     specied : Tuple[int, int]
         The material ID, local precursor ID pair.
-    time : float
-        The time to get the precursor at.
+    times : List[float]
+        The times to get the precursor species at.
+
+    Returns
+    -------
+    ndarray (n_times, n_cells)
     """
     assert species[0] < self.n_materials
     assert species[1] < self.max_precursors
@@ -101,6 +105,40 @@ def get_precursor_species(self: "SimulationReader",
             for t in range(len(times)):
                 vals[t, c] = tmp[t, dof]
     return vals
+
+
+def get_power_densities(self: "SimulationReader",
+                        times: List[float]) -> ndarray:
+    """Get the power densities at the providied times.
+
+    Parameters
+    ----------
+    times : List[float]
+        The times to get the power densities at.
+
+    Returns
+    -------
+    ndarray (n_times, n_cells)
+    """
+    times = times if isinstance(times, list) else [times]
+    return self._interpolate(times, self.power_densities)
+
+
+def get_temperatures(self: "SimulationReader",
+                     times: List[float]) -> ndarray:
+    """Get the temperatures at the providied times.
+
+    Parameters
+    ----------
+    times : List[float]
+        The times to get the temperatures at.
+
+    Returns
+    -------
+    ndarray (n_times, n_cells)
+    """
+    times = times if isinstance(times, list) else [times]
+    return self._interpolate(times, self.temperatures)
 
 
 def _interpolate(self: "SimulationReader",

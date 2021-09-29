@@ -169,7 +169,8 @@ def plot_power(self: "SimulationReader", mode: int = 0,
 
 
 def plot_temperatures(self: "SimulationReader",
-                      mode: int = 0) -> None:
+                      mode: int = 0,
+                      log_scale: bool = False) -> None:
     """Plot the temperature as a function of time.
 
     Parameters
@@ -178,16 +179,21 @@ def plot_temperatures(self: "SimulationReader",
         Flag for plotting average or peak temperatures.
         If 0, average temperatures are plotted.
         If 1, peak temperatures are plotted.
+    log_scale : bool, default False
+        log_scale : bool, default False
+        Flag for plotting linear or log scale on the y-axis.
     """
     T = self.average_temperatures
     if mode == 1:
         T = self.peak_temperatures
 
+
     fig: Figure = plt.figure()
     ax: Axes = fig.add_subplot(1, 1, 1)
     ax.set_xlabel("Time [sec]")
     ax.set_ylabel("Temperature [K]")
-    ax.plot(self.times, T, "-*b")
+    plotter = ax.semilogy if log_scale else ax.plot
+    plotter(self.times, T, "-*b")
     ax.grid(True)
     fig.tight_layout()
 
