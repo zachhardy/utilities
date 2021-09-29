@@ -10,14 +10,13 @@ from pyPDEs.utilities import Vector
 
 
 class SimulationReader:
-    """A class for reading and handling simulation data
-    from the Chi-Tech module LBTransientSolver.
+    """A class for reading and handling transient neutronics data.
     """
 
-    from ._read import (read_simulation_data,
-                        read_uint64_t,
-                        read_unsigned_int,
-                        read_double)
+    from ._reader import (read_simulation_data,
+                          read_uint64_t,
+                          read_unsigned_int,
+                          read_double)
 
     from ._mappings import map_phi_dof, map_precursor_dof
 
