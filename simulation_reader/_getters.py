@@ -6,9 +6,6 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-Grid = Union[ndarray, Tuple[ndarray, ndarray]]
-
-
 def get_flux_moment(self: "SimulationReader",
                     moment: int, times: List[float]) -> ndarray:
     """Get flux moment `m` at time `t`.
@@ -25,14 +22,12 @@ def get_flux_moment(self: "SimulationReader",
     ndarray (n_times, n_nodes * n_groups)
     """
     assert moment < self.n_moments
-    assert group < self.n_groups
-
     npc = self.nodes_per_cell
     N, G = self.n_nodes, self.n_groups
-    times = times if isinstance(times, list) else [times]
+    times = self._validate_times(times)
 
-    vals = np.zeros(len(times), N*G)
-    tmp = self._interpolate(time, self.flux_moments)
+    vals = np.zeros((len(times), N * G))
+    tmp = self._interpolate(times, self.flux_moments)
     for c in range(self.n_cells):
         for n in range(npc):
             start = c * npc * G + n * G
@@ -60,10 +55,9 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
     ndarray (n_times, n_nodes)
     """
     assert moment < self.n_moments
-    assert group < self.n_groups
-
+    assert group < self.n
     npc = self.nodes_per_cell
-    times = times if isinstance(times, list) else [times]
+    times = self._validate_times(times)
 
     vals = np.zeros((len(times), self.n_nodes))
     tmp = self._interpolate(times, self.flux_moments)
@@ -71,7 +65,7 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
         for n in range(npc):
             i = c*npc + n
             dof = self.map_phi_dof(c, n, moment, group)
-            for t in range(len(times)):
+            for t in range(len(time)):
                 vals[t, i] = tmp[t, dof]
     return vals
 
@@ -94,8 +88,7 @@ def get_precursor_species(self: "SimulationReader",
     """
     assert species[0] < self.n_materials
     assert species[1] < self.max_precursors
-
-    times = times if isinstance(times, list) else [times]
+    times = self._validate_times(times)
 
     vals = np.zeros((len(times), self.n_cells))
     tmp = self._interpolate(times, self.precursors)
@@ -120,7 +113,6 @@ def get_power_densities(self: "SimulationReader",
     -------
     ndarray (n_times, n_cells)
     """
-    times = times if isinstance(times, list) else [times]
     return self._interpolate(times, self.power_densities)
 
 
@@ -137,7 +129,6 @@ def get_temperatures(self: "SimulationReader",
     -------
     ndarray (n_times, n_cells)
     """
-    times = times if isinstance(times, list) else [times]
     return self._interpolate(times, self.temperatures)
 
 
@@ -157,15 +148,46 @@ def _interpolate(self: "SimulationReader",
     ndarray
         The interpolated data.
     """
+    times = self._validate_times(times)
     vals = np.zeros((len(times), data.shape[1]))
     for t, time in enumerate(times):
         dt = np.diff(self.times)[0]
+        # print(time)
+        # print(np.floor(time/dt), np.ceil(time/dt))
         i = [int(np.floor(time/dt)), int(np.ceil(time/dt))]
         w = [i[1] - time/dt, time/dt - i[0]]
         if i[0] == i[1]:
             w = [1.0, 0.0]
         vals[t] = w[0]*data[i[0]] + w[1]*data[i[1]]
     return vals
+
+
+def get_variable_by_key(self: "SimulationReader", key: str) -> ndarray:
+    """Get a variable by its name.
+
+    Parameters
+    ----------
+    key : str
+        The variable name.
+
+    Returns
+    -------
+    ndarray (shape varies)
+    """
+    if "flux" in key:
+        if "m" not in key and "g" not in key:
+            return self.flux_moments
+        elif "m" in key and "g" not in key:
+            m = int(key[key.find("m") + 1])
+            return self.get_flux_moment(m, self.times)
+        elif "m" in key and "g" in key:
+            m = int(key[key.find("m") + 1])
+            g = int(key[key.find("g") + 1])
+            return self.get_group_flux_moment(m, g, self.times)
+    elif key == "temperature":
+        return self.get_temperatures(self.times)
+    elif key == "power_density":
+        return self.get_power_densities(self.times)
 
 
 def _validate_times(self: "SimulationReader",
@@ -181,9 +203,10 @@ def _validate_times(self: "SimulationReader",
         times = [self.times[0], self.times[-1]]
     if isinstance(times, float):
         times = [times]
+    if isinstance(times, ndarray):
+        times = list(times)
     for time in times:
         if not self.times[0] <= time <= self.times[-1]:
             raise ValueError(
                 "A specified time falls outside of simulation bounds.")
     return times
-

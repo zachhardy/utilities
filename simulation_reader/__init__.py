@@ -26,8 +26,12 @@ class SimulationReader:
                            get_precursor_species,
                            get_power_densities,
                            get_temperatures,
+                           get_variable_by_key,
                            _interpolate,
                            _validate_times)
+
+    from ._formatters import (create_simulation_matrix,
+                              create_simulation_vector)
 
     from ._plotting import (plot_power,
                             plot_temperatures,
