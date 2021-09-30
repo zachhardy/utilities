@@ -29,6 +29,8 @@ def read_simulation_data(self: "SimulationReader") -> None:
 
             step = self.read_uint64_t(f)
             time = self.read_double(f)
+            self.times.append(time)
+
             power = self.read_double(f)
             peak_power = self.read_double(f)
             avg_power = self.read_double(f)
@@ -63,7 +65,6 @@ def read_simulation_data(self: "SimulationReader") -> None:
                 assert max_precursors == self.max_precursors
 
             # Set time and power
-            self.times[step] = time
             self.powers[step] = power
             self.peak_powers[step] = peak_power
             self.average_powers[step] = avg_power

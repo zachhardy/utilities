@@ -63,16 +63,16 @@ class SimulationReader:
         self.max_precursors: int = 0
         self.n_materials: int = 0
 
-        self.times: ndarray = []
+        self.times: List[float] = []
+        self.material_ids: List[int] = []
+        self.centroids: List[Vector] = []
+        self.nodes: List[Vector] = []
+
         self.powers: ndarray = []
         self.peak_powers: ndarray = []
         self.average_powers: ndarray = []
         self.peak_temperatures: ndarray = []
         self.average_temperatures: ndarray = []
-
-        self.material_ids: List[int] = []
-        self.centroids: List[Vector] = []
-        self.nodes: List[Vector] = []
 
         self.flux_moments: ndarray = []
         self.precursors: ndarray = []
@@ -85,7 +85,6 @@ class SimulationReader:
         T, N, C = self.n_snapshots, self.n_nodes, self.n_cells
         M, G, P = self.n_moments, self.n_groups, self.max_precursors
 
-        self.times = np.empty(T, dtype=float)
         self.powers = np.empty(T, dtype=float)
         self.peak_powers = np.empty(T, dtype=float)
         self.average_powers = np.empty(T, dtype=float)
