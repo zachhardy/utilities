@@ -55,7 +55,7 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
     ndarray (n_times, n_nodes)
     """
     assert moment < self.n_moments
-    assert group < self.n
+    assert group < self.n_groups
     npc = self.nodes_per_cell
     times = self._validate_times(times)
 
@@ -65,7 +65,7 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
         for n in range(npc):
             i = c*npc + n
             dof = self.map_phi_dof(c, n, moment, group)
-            for t in range(len(time)):
+            for t in range(len(times)):
                 vals[t, i] = tmp[t, dof]
     return vals
 

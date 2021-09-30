@@ -28,14 +28,6 @@ def read_simulation_data(self: "SimulationReader") -> None:
             f.read(1649)  # skip header
 
             step = self.read_uint64_t(f)
-            time = self.read_double(f)
-            self.times.append(time)
-
-            power = self.read_double(f)
-            peak_power = self.read_double(f)
-            avg_power = self.read_double(f)
-            peak_temp = self.read_double(f)
-            avg_temp = self.read_double(f)
 
             n_cells = self.read_uint64_t(f)
             n_nodes = self.read_uint64_t(f)
@@ -43,6 +35,7 @@ def read_simulation_data(self: "SimulationReader") -> None:
             n_groups = self.read_uint64_t(f)
             n_precursors = self.read_uint64_t(f)
             max_precursors = self.read_uint64_t(f)
+            n_blocks = self.read_unsigned_int(f)
 
             # Set macro-data if first snapshot
             if snapshot_num == 0:
@@ -64,14 +57,13 @@ def read_simulation_data(self: "SimulationReader") -> None:
                 assert n_precursors == self.n_precursors
                 assert max_precursors == self.max_precursors
 
-            # Set time and power
-            self.powers[step] = power
-            self.peak_powers[step] = peak_power
-            self.average_powers[step] = avg_power
-            self.peak_temperatures[step] = peak_temp
-            self.average_temperatures[step] = avg_temp
-
-            n_blocks = self.read_unsigned_int(f)
+            # Set time and system quantities
+            self.times[step] = self.read_double()
+            self.powers[step] = self.read_double(f)
+            self.peak_power_densities[step] = self.read_double(f)
+            self.average_power_densities[step] = self.read_double(f)
+            self.peak_temperatures[step] = self.read_double(f)
+            self.average_temperatures[step] = self.read_double(f)
 
             # Get the cell-wise data
             for c in range(n_cells):
@@ -147,6 +139,7 @@ def read_simulation_data(self: "SimulationReader") -> None:
                 cell_id = self.read_uint64_t(f)
                 self.power_densities[step, cell_id] = self.read_double(f)
 
+    self.times = np.array(self.times)
     self._determine_dimension()
 
 

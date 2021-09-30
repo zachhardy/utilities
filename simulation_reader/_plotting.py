@@ -129,9 +129,10 @@ def plot_power(self: "SimulationReader", mode: int = 0,
     fig: Figure = plt.figure()
     axs: List[Axes] = []
     if "shutdown" in self.path.lower():
-        decay0 = self.powers[1] * np.exp(-0.1*self.times)
-        decay1 = self.powers[1] * np.exp(-0.5*self.times)
-        decay2 = self.powers[1] * np.exp(-1.0*self.times)
+        times = np.array(self.times)
+        decay0 = self.powers[1] * np.exp(-0.1*times)
+        decay1 = self.powers[1] * np.exp(-0.5*times)
+        decay2 = self.powers[1] * np.exp(-1.0*times)
 
         ax: Axes = fig.add_subplot(1, 2, 1)
         ax.semilogy(self.times, self.powers, "-*b", label="Power")
@@ -151,9 +152,9 @@ def plot_power(self: "SimulationReader", mode: int = 0,
     else:
         p = self.powers
         if mode == 1:
-            p = self.average_powers
+            p = self.average_power_densities
         elif mode == 2:
-            p = self.peak_powers
+            p = self.peak_power_densities
 
         ax: Axes = fig.add_subplot(1, 1, 1)
         plotter = ax.plot if not log_scale else ax.semilogy
