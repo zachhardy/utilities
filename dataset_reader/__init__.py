@@ -102,16 +102,16 @@ class DatasetReader:
         return self.simulations[0].times
 
     @property
-    def material_ids(self) -> List[int]:
-        return self.simulations[0].material_ids
+    def nodes(self) -> List[Vector]:
+        return self.simulations[0].nodes
 
     @property
     def centroids(self) -> List[Vector]:
         return self.simulations[0].centroids
 
     @property
-    def nodes(self) -> List[Vector]:
-        return self.simulations[0].nodes
+    def material_ids(self) -> List[int]:
+        return self.simulations[0].material_ids
 
     def clear(self) -> None:
         self.__init__(self.path)

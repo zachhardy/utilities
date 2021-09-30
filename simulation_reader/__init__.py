@@ -64,9 +64,9 @@ class SimulationReader:
         self.n_materials: int = 0
 
         self.times: List[float] = []
-        self.material_ids: List[int] = []
-        self.centroids: List[Vector] = []
         self.nodes: List[Vector] = []
+        self.centroids: List[Vector] = []
+        self.material_ids: List[int] = []
 
         self.powers: ndarray = []
         self.peak_powers: ndarray = []
