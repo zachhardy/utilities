@@ -22,6 +22,8 @@ class DatasetReader:
         self.parameters: ndarray = []
 
     def read_dataset(self) -> None:
+        """Read a set of parameterized simulation results.
+        """
         self.clear()
 
         # Get sorted file list
@@ -39,12 +41,36 @@ class DatasetReader:
                     self.parameters = self.parameters.reshape(shape)
 
     def create_dataset_matrix(self, variables: List[str] = None) -> ndarray:
+        """Create a matrix for POD reduced order modeling.
+
+        Parameters
+        ----------
+        variables : List[str], default None
+            The variables to stack. The default behavior stacks
+            only the groupwise scalar flux values.
+
+        Returns
+        -------
+        ndarray (n_snapshots * varies, n_simulations)
+        """
         for n, simulation in enumerate(self.simulations):
             tmp = simulation.create_simulation_vector(variables)
             matrix = tmp if n == 0 else np.hstack((matrix, tmp))
         return matrix.T
 
     def unstack_simulation_vector(self, vector: ndarray) -> ndarray:
+        """Unstack simulation vectors into snapshot matrices.
+
+        Parameters
+        ----------
+        vector : ndarray (varies, n_snapshots * varies)
+            A set of simulation vectors, where each row is an
+            independent simulation.
+
+        Returns
+        -------
+        ndarray (varies, n_snapshots, varies)
+        """
         if vector.ndim == 1:
             vector = np.atleast_2d(vector)
         return vector.reshape(vector.shape[0], self.n_snapshots, -1)
