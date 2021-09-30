@@ -31,7 +31,7 @@ class DatasetReader:
 
         for simulation_num, simulation in enumerate(entries):
             path = os.path.join(self.path, simulation)
-            if os.path.isdir(path):
+            if os.path.isdir(path) and "reference" not in path:
                 self.simulations.append(SimulationReader(path))
                 self.simulations[-1].read_simulation_data()
             elif simulation == "params.txt":
