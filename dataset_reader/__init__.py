@@ -35,10 +35,9 @@ class DatasetReader:
                 self.simulations.append(SimulationReader(path))
                 self.simulations[-1].read_simulation_data()
             elif simulation == "params.txt":
-                self.parameters = np.loadtxt(path)
-                if self.parameters.ndim == 1:
-                    shape = (self.n_simulations, 1)
-                    self.parameters = self.parameters.reshape(shape)
+                params = np.loadtxt(path)
+                self.parameters = params.reshape(self.n_simulations, -1)
+
 
     def create_dataset_matrix(self, variables: List[str] = None) -> ndarray:
         """Create a matrix for POD reduced order modeling.
