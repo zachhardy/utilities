@@ -85,6 +85,8 @@ class SimulationReader:
         T, N, C = self.n_snapshots, self.n_nodes, self.n_cells
         M, G, P = self.n_moments, self.n_groups, self.max_precursors
 
+        self.times = np.empty(T, dtype=float)
+
         self.powers = np.empty(T, dtype=float)
         self.peak_power_densities = np.empty(T, dtype=float)
         self.average_power_densities = np.empty(T, dtype=float)

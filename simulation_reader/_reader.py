@@ -58,7 +58,7 @@ def read_simulation_data(self: "SimulationReader") -> None:
                 assert max_precursors == self.max_precursors
 
             # Set time and system quantities
-            self.times[step] = self.read_double()
+            self.times[step] = self.read_double(f)
             self.powers[step] = self.read_double(f)
             self.peak_power_densities[step] = self.read_double(f)
             self.average_power_densities[step] = self.read_double(f)
