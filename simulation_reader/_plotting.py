@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 
 def plot_power_densities(self: "SimulationReader",
-                         times: List[float] = None) -> None:
+                         times: List[float] = None,
+                         singular_normalization: bool = True) -> None:
     """Plot power densities at the various times.
 
     Parameters
@@ -23,21 +24,27 @@ def plot_power_densities(self: "SimulationReader",
     # Get power densities
     P = self._interpolate(times, self.power_densities)
 
-    # Define labels for plots
-    labels = [f"Time {t:.3f} sec" for t in times]
-
     # Plot 1D profiles
     if self.dim == 1:
-        title = "Power Density"
-        ylabel = r"$P(z)$ [$\frac{W}{cm^{3}}$]"
-        self._plot_1d_cell_centered(P, labels, title, ylabel)
+        # Initialize figure
+        fig: Figure = plt.figure()
+        ax: Axes = fig.add_subplot(1, 1, 1)
+        ax.set_title("Power Densities")
+        ax.set_xlabel("z [cm]")
+        ax.set_ylabel(r"P(z) [$\frac{W}{cm^{3}}$]")
+
+        # Generate grid
+        z = np.array([p.z for p in self.centroids])
+
+        # Plot at specified times
+        for t, time in enumerate(times):
+            ax.plot(z, P[t], label=f"Time = {time:.3f} sec")
+        ax.legend()
+        ax.grid(True)
+        fig.tight_layout()
 
     # Plot 2D profiles
     elif self.dim == 2:
-        x = np.array([p.x for p in self.nodes])
-        y = np.array([p.y for p in self.nodes])
-        X, Y = np.meshgrid(np.unique(x), np.unique(y))
-
         # Subplot dimentsions
         n_rows, n_cols = self._format_subplots(len(times))
 
@@ -46,15 +53,21 @@ def plot_power_densities(self: "SimulationReader",
         fig: Figure = plt.figure(figsize=figsize)
         fig.suptitle(r"P(x, y) [$\frac{W}{cm^{3}}$]")
 
+        # Generate grid
+        x = np.array([p.x for p in self.centroids])
+        y = np.array([p.y for p in self.centroids])
+        X, Y = np.meshgrid(np.unique(x), np.unique(y))
+
+        # Plot at specified times
         for t, time in enumerate(times):
             P_fmtd = P[t].reshape(X.shape)
 
             ax: Axes = fig.add_subplot(n_rows, n_cols, t + 1)
             ax.set_xlabel("X [cm]")
             ax.set_ylabel("Y [cm]")
-            ax.set_title(f"Time = {t:.3f} sec")
+            ax.set_title(f"Time = {time:.3f} sec")
             im = ax.pcolor(X, Y, P_fmtd, cmap="jet", shading="auto",
-                           vmin=0.0, vmax=P.max())
+                           vmin=0.0, vmax=P_fmtd.max())
             fig.colorbar(im)
         fig.tight_layout()
 
@@ -73,29 +86,41 @@ def plot_temperature_profiles(self: "SimulationReader",
     # Get power densities
     T = self._interpolate(times, self.temperatures)
 
-    # Define labels for plots
-    labels = [f"Time {t:.3f} sec" for t in times]
-
     # Plot 1D profiles
     if self.dim == 1:
-        title = "Temperature"
-        ylabel = "T(z) [K]"
-        self._plot_1d(T, labels, title, ylabel)
+        # Initialize figure
+        fig: Figure = plt.figure()
+        ax: Axes = fig.add_subplot(1, 1, 1)
+        ax.set_title("Temperatures")
+        ax.set_xlabel("z [cm]")
+        ax.set_ylabel(r"T(z) [K]")
+
+        # Generate grid
+        z = np.array([p.z for p in self.centroids])
+
+        # Plot at specified times
+        for t, time in enumerate(times):
+            ax.plot(z, T[t], label=f"Time = {time:.3f} sec")
+        ax.legend()
+        ax.grid(True)
+        fig.tight_layout()
 
     # Plot 2D profiles
     elif self.dim == 2:
-        x = np.array([p.x for p in self.nodes])
-        y = np.array([p.y for p in self.nodes])
-        X, Y = np.meshgrid(np.unique(x), np.unique(y))
-
         # Subplot dimentsions
         n_rows, n_cols = self._format_subplots(len(times))
 
         # Initialize figure
-        figsize = (4 * n_cols, 4 * n_rows)
+        figsize = (4*n_cols, 4*n_rows)
         fig: Figure = plt.figure(figsize=figsize)
         fig.suptitle("T(x, y) [K]")
 
+        # Generate grid
+        x = np.array([p.x for p in self.nodes])
+        y = np.array([p.y for p in self.nodes])
+        X, Y = np.meshgrid(np.unique(x), np.unique(y))
+
+        # Plot at specified times
         for t, time in enumerate(times):
             T_fmtd = T[t].reshape(X.shape)
 
@@ -104,7 +129,7 @@ def plot_temperature_profiles(self: "SimulationReader",
             ax.set_ylabel("Y [cm]")
             ax.set_title(f"Time = {t:.3f} sec")
             im = ax.pcolor(X, Y, T_fmtd, cmap="jet", shading="auto",
-                           vmin=0.0, vmax=T.max())
+                           vmin=0.0, vmax=T_fmtd.max())
             fig.colorbar(im)
         fig.tight_layout()
 
@@ -188,7 +213,6 @@ def plot_temperatures(self: "SimulationReader",
     if mode == 1:
         T = self.peak_temperatures
 
-
     fig: Figure = plt.figure()
     ax: Axes = fig.add_subplot(1, 1, 1)
     ax.set_xlabel("Time [sec]")
@@ -209,9 +233,8 @@ def _format_subplots(n_plots: int) -> Tuple[int, int]:
         The number of subplots that will be used.
 
     """
-    n_rows, n_cols = 1, 1
     if n_plots < 4:
-        n_rows, n_cols = 1, 3
+        n_rows, n_cols = 1, n_plots
     elif 4 <= n_plots < 9:
         ref = int(np.ceil(np.sqrt((n_plots))))
         n_rows = n_cols = ref
