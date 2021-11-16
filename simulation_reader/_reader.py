@@ -10,8 +10,9 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def read_simulation_data(self: "SimulationReader") -> None:
-    """Parse the binary files of a simulation.
+def read_simulation_data(self: 'SimulationReader') -> None:
+    """
+    Parse the binary files of a simulation.
     """
     self.clear()
 
@@ -24,7 +25,7 @@ def read_simulation_data(self: "SimulationReader") -> None:
         path = os.path.join(self.path, snapshot)
 
         # Open snapshot file
-        with open(path, mode="rb") as f:
+        with open(path, mode='rb') as f:
             f.read(1649)  # skip header
 
             step = self.read_uint64_t(f)
@@ -145,14 +146,14 @@ def read_simulation_data(self: "SimulationReader") -> None:
 
 @staticmethod
 def read_double(file) -> float:
-    return struct.unpack("d", file.read(8))[0]
+    return struct.unpack('d', file.read(8))[0]
 
 
 @staticmethod
 def read_uint64_t(file) -> int:
-    return struct.unpack("Q", file.read(8))[0]
+    return struct.unpack('Q', file.read(8))[0]
 
 
 @staticmethod
 def read_unsigned_int(file) -> int:
-    return struct.unpack("I", file.read(4))[0]
+    return struct.unpack('I', file.read(4))[0]

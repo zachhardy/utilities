@@ -9,20 +9,22 @@ from simulation_reader import SimulationReader
 
 
 class DatasetReader:
-    """A class for reading and handling multiple simulations.
+    """
+    A class for reading and handling multiple simulations.
     """
 
     def __init__(self, path: str) -> None:
         if not os.path.isdir(path):
             raise NotADirectoryError(
-                "The provided path is not a valid directory.")
+                'The provided path is not a valid directory.')
 
         self.path: str = os.path.abspath(path)
         self.simulations : List[SimulationReader] = []
         self.parameters: ndarray = []
 
     def read_dataset(self) -> None:
-        """Read a set of parameterized simulation results.
+        """
+        Read a set of parameterized simulation results.
         """
         self.clear()
 
@@ -31,16 +33,17 @@ class DatasetReader:
 
         for simulation_num, simulation in enumerate(entries):
             path = os.path.join(self.path, simulation)
-            if os.path.isdir(path) and "reference" not in path:
+            if os.path.isdir(path) and 'reference' not in path:
                 self.simulations.append(SimulationReader(path))
                 self.simulations[-1].read_simulation_data()
-            elif simulation == "params.txt":
+            elif simulation == 'params.txt':
                 params = np.loadtxt(path)
                 self.parameters = params.reshape(self.n_simulations, -1)
 
 
     def create_dataset_matrix(self, variables: List[str] = None) -> ndarray:
-        """Create a matrix for POD reduced order modeling.
+        """
+        Create a matrix for POD reduced order modeling.
 
         Parameters
         ----------
@@ -58,7 +61,8 @@ class DatasetReader:
         return matrix.T
 
     def unstack_simulation_vector(self, vector: ndarray) -> ndarray:
-        """Unstack simulation vectors into snapshot matrices.
+        """
+        Unstack simulation vectors into snapshot matrices.
 
         Parameters
         ----------

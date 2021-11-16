@@ -3,10 +3,11 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def map_phi_dof(self: "SimulationReader",
+def map_phi_dof(self: 'SimulationReader',
                 cell_id: int, node: int,
                 moment: int, group: int) -> int:
-    """Get a flux moment DoF.
+    """
+    Get a flux moment DoF.
 
     This routine maps a cell, node, moment, and group
     to a DoF in the flux moment vector. This assumes
@@ -31,9 +32,10 @@ def map_phi_dof(self: "SimulationReader",
     M, G = self.n_moments, self.n_groups
     return cell_id * N * M *G + node * M *G + moment *G + group
 
-def map_precursor_dof(self: "SimulationReader",
+def map_precursor_dof(self: 'SimulationReader',
                       cell_id: int, precursor: int) -> int:
-    """Get a delayed neutron precursor DoF.
+    """
+    Get a delayed neutron precursor DoF.
 
     This routine maps a cell and precursor to a DoF in the
     precursor vector. Precursors are defined at cell centers,

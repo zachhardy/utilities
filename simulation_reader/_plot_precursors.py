@@ -8,10 +8,11 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def plot_precursors(self: "SimulationReader",
+def plot_precursors(self: 'SimulationReader',
                     species: List[Tuple[int, int]],
                     times: List[float] = None) -> None:
-    """Plot precursor species at various times.
+    """
+    Plot precursor species at various times.
 
     Parameters
     ----------
@@ -38,10 +39,10 @@ def plot_precursors(self: "SimulationReader",
         for species_ in species:
             fig: Figure = plt.figure()
             ax: Axes = fig.add_subplot(1, 1, 1)
-            ax.set_title(f"Material {species_[0]} "
-                         f"Precursor Species {species_[1]}")
-            ax.set_xlabel("z [cm]")
-            ax.set_ylabel(r"$C_{i,j}(z)$ $[$\frac{#}{cm^3}$]")
+            ax.set_title(f'Material {species_[0]} '
+                         f'Precursor Species {species_[1]}')
+            ax.set_xlabel('z [cm]')
+            ax.set_ylabel(r'$C_{i,j}(z)$ $[$\frac{#}{cm^3}$]')
 
             # Get the precursors at specified times
             C = self.get_precursor_species(species_, times)
@@ -49,7 +50,7 @@ def plot_precursors(self: "SimulationReader",
 
             # Plot the precursors
             for t, time in enumerate(times):
-                label = f"Time = {time:.3f} sec"
+                label = f'Time = {time:.3f} sec'
                 ax.plot(z, C[t], label=label)
             ax.legend()
             ax.grid(True)
@@ -67,8 +68,8 @@ def plot_precursors(self: "SimulationReader",
         for species_ in species:
             figsize = (4 * n_cols, 4 * n_rows)
             fig: Figure = plt.figure(figsize=figsize)
-            fig.suptitle(f"Material {species_[0]} "
-                         f"Precursor Species {species_[1]}")
+            fig.suptitle(f'Material {species_[0]} '
+                         f'Precursor Species {species_[1]}')
 
             # Get the flux moments at specified times
             shape = (len(times), self.n_cells)
@@ -82,10 +83,10 @@ def plot_precursors(self: "SimulationReader",
                 C_fmtd = C[t].reshape(X.shape)
 
                 ax: Axes = fig.add_subplot(n_rows, n_cols, t + 1)
-                ax.set_xlabel("X [cm]")
-                ax.set_ylabel("Y [cm]")
-                ax.set_title(f"Time = {t:.3f} sec")
-                im = ax.pcolor(X, Y, C_fmtd, cmap="jet", shading="auto",
+                ax.set_xlabel('X [cm]')
+                ax.set_ylabel('Y [cm]')
+                ax.set_title(f'Time = {t:.3f} sec')
+                im = ax.pcolor(X, Y, C_fmtd, cmap='jet', shading='auto',
                                vmin=0.0, vmax=C.max())
                 fig.colorbar(im)
             fig.tight_layout()

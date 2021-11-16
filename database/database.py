@@ -23,7 +23,8 @@ class Database:
 
     @property
     def n_simulations(self) -> int:
-        """Get the number of simulations.
+        """
+        Get the number of simulations.
 
         Returns
         -------
@@ -33,7 +34,8 @@ class Database:
 
     @property
     def n_timesteps(self) -> int:
-        """Get the number of timesteps per simulation.
+        """
+        Get the number of timesteps per simulation.
 
         Returns
         -------
@@ -43,7 +45,8 @@ class Database:
 
     @property
     def n_grid_points(self) -> int:
-        """Get the number of grid points.
+        """
+        Get the number of grid points.
 
         Returns
         -------
@@ -53,7 +56,8 @@ class Database:
 
     @property
     def n_parameters(self) -> int:
-        """Get the number of parameters.
+        """
+        Get the number of parameters.
 
         Returns
         -------
@@ -63,7 +67,8 @@ class Database:
 
     @property
     def n_variables(self) -> int:
-        """Get the number of variables.
+        """
+        Get the number of variables.
 
         Returns
         -------
@@ -73,7 +78,8 @@ class Database:
 
     @property
     def n_global_variables(self) -> int:
-        """Get the total number of globally defined variables.
+        """
+        Get the total number of globally defined variables.
 
         Returns
         -------
@@ -83,7 +89,8 @@ class Database:
 
     @property
     def n_nodal_variables(self) -> int:
-        """Get the total number of nodally defined variables.
+        """
+        Get the total number of nodally defined variables.
 
         Returns
         -------
@@ -93,7 +100,8 @@ class Database:
 
     @property
     def n_dofs(self) -> int:
-        """Get the total number of DoFs.
+        """
+        Get the total number of DoFs.
 
         This returns the total across all variables.
 
@@ -106,7 +114,8 @@ class Database:
 
     @property
     def data(self) -> Dict[str, ndarray]:
-        """Get the data stored within the database.
+        """
+        Get the data stored within the database.
 
         Returns
         -------
@@ -119,7 +128,8 @@ class Database:
 
     @property
     def variable_names(self) -> List[str]:
-        """Get the variable_names corresponding.
+        """
+        Get the variable_names corresponding.
 
         Returns
         -------
@@ -129,7 +139,8 @@ class Database:
 
     @property
     def grid(self) -> ndarray:
-        """Get the grid nodal variables are defined on.
+        """
+        Get the grid nodal variables are defined on.
 
         Returns
         -------
@@ -139,7 +150,8 @@ class Database:
 
     @property
     def times(self) -> ndarray:
-        """Get the snapshot times.
+        """
+        Get the snapshot times.
 
         Returns
         -------
@@ -149,7 +161,8 @@ class Database:
 
     @property
     def parameters(self) -> List[List[float]]:
-        """Get the parameters of each simulation.
+        """
+        Get the parameters of each simulation.
 
         Returns
         -------
@@ -161,7 +174,8 @@ class Database:
 
     def read_database(
             self, datapath: str, verbose: bool = False) -> None:
-        """Read a database.
+        """
+        Read a database.
 
         Parameters
         ----------
@@ -217,7 +231,8 @@ class Database:
 
     def read_database_entry(
             self, datapath: str, verbose: bool = False) -> None:
-        """Read a database entry or a standalone simulation result.
+        """
+        Read a database entry or a standalone simulation result.
 
         Parameters
         ----------
@@ -238,7 +253,7 @@ class Database:
             self.parse_grid(datapath)
 
         # ======================================== Go through directory
-        skip = ["times", "grid", ".pdf", "power", "k_eff"]
+        skip = ["times", "grid", ".pdf", "k_eff"]
         for var in sorted(os.listdir(datapath)):
             if any([name in var for name in skip]):
                 continue
@@ -269,7 +284,8 @@ class Database:
 
     def combine_variables(self, nodal: bool = True,
                           variables: List[str] = None) -> ndarray:
-        """Combine the variables into a dataset.
+        """
+        Combine the variables into a dataset.
 
         The ordering of the DoFs in the vector is based on the value
         of `nodal`. If true, all DoFs that live on a node are
@@ -339,7 +355,8 @@ class Database:
 
     def stack_simulations(self, nodal: bool = True,
                           variables: List[str] = None) -> ndarray:
-        """Stack each simulation data set into individual vectors.
+        """
+        Stack each simulation data set into individual vectors.
 
         The ordering of the DoFs in the vector is based on the value
         of `nodal`. If true, all DoFs that live on a node are
@@ -382,7 +399,8 @@ class Database:
         return data
 
     def unstack_simulations(self, x: ndarray) -> ndarray:
-        """ Unstack a simulation vector or matrix.
+        """
+        Unstack a simulation vector or matrix.
 
         This converts simulation vectors into independent time
         series of snapshots.
@@ -401,7 +419,8 @@ class Database:
         return x.reshape(x.shape[0], self.n_timesteps, -1)
 
     def parse_times(self, filepath: str) -> None:
-        """Parse the times.
+        """
+        Parse the times.
 
         Parameters
         ----------
@@ -413,7 +432,8 @@ class Database:
             self._times = np.loadtxt(times_filepath)
 
     def parse_grid(self, filepath: str) -> None:
-        """Parse the grid.
+        """
+        Parse the grid.
 
         Parameters
         ----------
@@ -425,7 +445,8 @@ class Database:
             self._grid = np.loadtxt(grid_filepath)
 
     def parse_parameters(self, filepath: str) -> None:
-        """Parse the parameters that define simulations.
+        """
+        Parse the parameters that define simulations.
 
         Parameters
         ----------
@@ -441,7 +462,8 @@ class Database:
 
     def parse_variable(
             self, filepath: str, has_components: bool = False) -> None:
-        """Parse a file containing simulation output data.
+        """
+        Parse a file containing simulation output data.
 
         Parameters
         ----------
@@ -484,7 +506,8 @@ class Database:
             self._data[name][-1].append(list(data[t]))
 
     def parse_keff(self, datapath: str) -> ndarray:
-        """Parse k-eigenvalues from neutronics simulation databases.
+        """
+        Parse k-eigenvalues from neutronics simulation databases.
 
         Parameters
         ----------
@@ -521,7 +544,8 @@ class Database:
     @staticmethod
     def get_key_from_file(
             filepath: str, has_components: bool = False) -> str:
-        """Get the variable name (key) from the filepath.
+        """
+        Get the variable name (key) from the filepath.
 
         Parameters
         ----------

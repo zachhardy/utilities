@@ -21,7 +21,7 @@ def plot_flux_moments(self: "SimulationReader",
         The moment index to plot.
     groups : List[int]
         The group indices to plot.
-    times : List[float
+    times : List[float]
         The times to plot the flux moment at.
     """
 
@@ -115,7 +115,6 @@ def _plot_2d_flux_moments(self: "SimulationReader",
         phi = np.zeros(shape, dtype=float)
         for t, time in enumerate(times):
             phi[t] = self.get_group_flux_moment(moment, group, time)
-        phi /= np.max(phi)
 
         # Plot the flux moments
         for t, time in enumerate(times):
@@ -124,8 +123,8 @@ def _plot_2d_flux_moments(self: "SimulationReader",
             ax: Axes = fig.add_subplot(n_rows, n_cols, t + 1)
             ax.set_xlabel("X [cm]")
             ax.set_ylabel("Y [cm]")
-            ax.set_title(f"Time = {t:.3f} sec")
+            ax.set_title(f"Time = {time:.3f} sec")
             im = ax.pcolor(X, Y, phi_fmtd, cmap="jet", shading="auto",
-                           vmin=0.0, vmax=phi.max())
+                           vmin=0.0, vmax=phi_fmtd.max())
             fig.colorbar(im)
         fig.tight_layout()

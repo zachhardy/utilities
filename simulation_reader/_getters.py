@@ -6,9 +6,10 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def get_flux_moment(self: "SimulationReader",
+def get_flux_moment(self: 'SimulationReader',
                     moment: int, times: List[float]) -> ndarray:
-    """Get flux moment `m` at time `t`.
+    """
+    Get flux moment `m` at time `t`.
 
     Parameters
     ----------
@@ -37,9 +38,10 @@ def get_flux_moment(self: "SimulationReader",
     return vals
 
 
-def get_group_flux_moment(self: "SimulationReader", moment: int,
+def get_group_flux_moment(self: 'SimulationReader', moment: int,
                           group: int, times: List[float]) -> ndarray:
-    """Get group `g` flux moment `m` and time `t`.
+    """
+    Get group `g` flux moment `m` and time `t`.
 
     Parameters
     ----------
@@ -70,10 +72,11 @@ def get_group_flux_moment(self: "SimulationReader", moment: int,
     return vals
 
 
-def get_precursor_species(self: "SimulationReader",
+def get_precursor_species(self: 'SimulationReader',
                           species: Tuple[int, int],
                           times: List[float]) -> ndarray:
-    """Get the delayed neutron precursor `j` on `material_id`.
+    """
+    Get the delayed neutron precursor `j` on `material_id`.
 
     Parameters
     ----------
@@ -100,9 +103,10 @@ def get_precursor_species(self: "SimulationReader",
     return vals
 
 
-def get_power_densities(self: "SimulationReader",
+def get_power_densities(self: 'SimulationReader',
                         times: List[float]) -> ndarray:
-    """Get the power densities at the providied times.
+    """
+    Get the power densities at the providied times.
 
     Parameters
     ----------
@@ -116,9 +120,10 @@ def get_power_densities(self: "SimulationReader",
     return self._interpolate(times, self.power_densities)
 
 
-def get_temperatures(self: "SimulationReader",
+def get_temperatures(self: 'SimulationReader',
                      times: List[float]) -> ndarray:
-    """Get the temperatures at the providied times.
+    """
+    Get the temperatures at the providied times.
 
     Parameters
     ----------
@@ -132,9 +137,10 @@ def get_temperatures(self: "SimulationReader",
     return self._interpolate(times, self.temperatures)
 
 
-def _interpolate(self: "SimulationReader",
+def _interpolate(self: 'SimulationReader',
                  times: List[float], data: ndarray) -> ndarray:
-    """Interpolate at a specified time.
+    """
+    Interpolate at a specified time.
 
     Parameters
     ----------
@@ -162,8 +168,9 @@ def _interpolate(self: "SimulationReader",
     return vals
 
 
-def get_variable_by_key(self: "SimulationReader", key: str) -> ndarray:
-    """Get a variable by its name.
+def get_variable_by_key(self: 'SimulationReader', key: str) -> ndarray:
+    """
+    Get a variable by its name.
 
     Parameters
     ----------
@@ -174,25 +181,26 @@ def get_variable_by_key(self: "SimulationReader", key: str) -> ndarray:
     -------
     ndarray (shape varies)
     """
-    if "flux" in key:
-        if "m" not in key and "g" not in key:
+    if 'flux' in key:
+        if 'm' not in key and 'g' not in key:
             return self.flux_moments
-        elif "m" in key and "g" not in key:
-            m = int(key[key.find("m") + 1])
+        elif 'm' in key and 'g' not in key:
+            m = int(key[key.find('m') + 1])
             return self.get_flux_moment(m, self.times)
-        elif "m" in key and "g" in key:
-            m = int(key[key.find("m") + 1])
-            g = int(key[key.find("g") + 1])
+        elif 'm' in key and 'g' in key:
+            m = int(key[key.find('m') + 1])
+            g = int(key[key.find('g') + 1])
             return self.get_group_flux_moment(m, g, self.times)
-    elif key == "temperature":
+    elif key == 'temperature':
         return self.get_temperatures(self.times)
-    elif key == "power_density":
+    elif key == 'power_density':
         return self.get_power_densities(self.times)
 
 
-def _validate_times(self: "SimulationReader",
+def _validate_times(self: 'SimulationReader',
                     times: List[float]) -> List[float]:
-    """Ensure the plotting times are valid.
+    """
+    Ensure the plotting times are valid.
 
     Parameters
     ----------
@@ -208,5 +216,5 @@ def _validate_times(self: "SimulationReader",
     for time in times:
         if not self.times[0] <= time <= self.times[-1]:
             raise ValueError(
-                "A specified time falls outside of simulation bounds.")
+                'A specified time falls outside of simulation bounds.')
     return times

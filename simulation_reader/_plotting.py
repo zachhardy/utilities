@@ -9,10 +9,11 @@ if TYPE_CHECKING:
     from . import SimulationReader
 
 
-def plot_power_densities(self: "SimulationReader",
+def plot_power_densities(self: 'SimulationReader',
                          times: List[float] = None,
                          singular_normalization: bool = True) -> None:
-    """Plot power densities at the various times.
+    """
+    Plot power densities at the various times.
 
     Parameters
     ----------
@@ -29,16 +30,16 @@ def plot_power_densities(self: "SimulationReader",
         # Initialize figure
         fig: Figure = plt.figure()
         ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_title("Power Densities")
-        ax.set_xlabel("z [cm]")
-        ax.set_ylabel(r"P(z) [$\frac{W}{cm^{3}}$]")
+        ax.set_title('Power Densities')
+        ax.set_xlabel('z [cm]')
+        ax.set_ylabel(r'P(z) [$\frac{W}{cm^{3}}$]')
 
         # Generate grid
         z = np.array([p.z for p in self.centroids])
 
         # Plot at specified times
         for t, time in enumerate(times):
-            ax.plot(z, P[t], label=f"Time = {time:.3f} sec")
+            ax.plot(z, P[t], label=f'Time = {time:.3f} sec')
         ax.legend()
         ax.grid(True)
         fig.tight_layout()
@@ -51,7 +52,7 @@ def plot_power_densities(self: "SimulationReader",
         # Initialize figure
         figsize = (4*n_cols, 4*n_rows)
         fig: Figure = plt.figure(figsize=figsize)
-        fig.suptitle(r"P(x, y) [$\frac{W}{cm^{3}}$]")
+        fig.suptitle(r'P(x, y) [$\frac{W}{cm^{3}}$]')
 
         # Generate grid
         x = np.array([p.x for p in self.centroids])
@@ -63,18 +64,19 @@ def plot_power_densities(self: "SimulationReader",
             P_fmtd = P[t].reshape(X.shape)
 
             ax: Axes = fig.add_subplot(n_rows, n_cols, t + 1)
-            ax.set_xlabel("X [cm]")
-            ax.set_ylabel("Y [cm]")
-            ax.set_title(f"Time = {time:.3f} sec")
-            im = ax.pcolor(X, Y, P_fmtd, cmap="jet", shading="auto",
+            ax.set_xlabel('X [cm]')
+            ax.set_ylabel('Y [cm]')
+            ax.set_title(f'Time = {time:.3f} sec')
+            im = ax.pcolor(X, Y, P_fmtd, cmap='jet', shading='auto',
                            vmin=0.0, vmax=P_fmtd.max())
             fig.colorbar(im)
         fig.tight_layout()
 
 
-def plot_temperature_profiles(self: "SimulationReader",
+def plot_temperature_profiles(self: 'SimulationReader',
                               times: List[float]) -> None:
-    """Plot temperatures at various times.
+    """
+    Plot temperatures at various times.
 
     Parameters
     ----------
@@ -91,16 +93,16 @@ def plot_temperature_profiles(self: "SimulationReader",
         # Initialize figure
         fig: Figure = plt.figure()
         ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_title("Temperatures")
-        ax.set_xlabel("z [cm]")
-        ax.set_ylabel(r"T(z) [K]")
+        ax.set_title('Temperatures')
+        ax.set_xlabel('z [cm]')
+        ax.set_ylabel(r'T(z) [K]')
 
         # Generate grid
         z = np.array([p.z for p in self.centroids])
 
         # Plot at specified times
         for t, time in enumerate(times):
-            ax.plot(z, T[t], label=f"Time = {time:.3f} sec")
+            ax.plot(z, T[t], label=f'Time = {time:.3f} sec')
         ax.legend()
         ax.grid(True)
         fig.tight_layout()
@@ -113,7 +115,7 @@ def plot_temperature_profiles(self: "SimulationReader",
         # Initialize figure
         figsize = (4*n_cols, 4*n_rows)
         fig: Figure = plt.figure(figsize=figsize)
-        fig.suptitle("T(x, y) [K]")
+        fig.suptitle('T(x, y) [K]')
 
         # Generate grid
         x = np.array([p.x for p in self.nodes])
@@ -125,18 +127,19 @@ def plot_temperature_profiles(self: "SimulationReader",
             T_fmtd = T[t].reshape(X.shape)
 
             ax: Axes = fig.add_subplot(n_rows, n_cols, t + 1)
-            ax.set_xlabel("X [cm]")
-            ax.set_ylabel("Y [cm]")
-            ax.set_title(f"Time = {t:.3f} sec")
-            im = ax.pcolor(X, Y, T_fmtd, cmap="jet", shading="auto",
+            ax.set_xlabel('X [cm]')
+            ax.set_ylabel('Y [cm]')
+            ax.set_title(f'Time = {t:.3f} sec')
+            im = ax.pcolor(X, Y, T_fmtd, cmap='jet', shading='auto',
                            vmin=0.0, vmax=T_fmtd.max())
             fig.colorbar(im)
         fig.tight_layout()
 
 
-def plot_power(self: "SimulationReader", mode: int = 0,
+def plot_power(self: 'SimulationReader', mode: int = 0,
                log_scale: bool = False) -> None:
-    """Plot the power as a function of time.
+    """
+    Plot the power as a function of time.
 
     In special cases, this routine plots reference lines to
     show agreement with expected results.
@@ -153,25 +156,25 @@ def plot_power(self: "SimulationReader", mode: int = 0,
     """
     fig: Figure = plt.figure()
     axs: List[Axes] = []
-    if "shutdown" in self.path.lower():
+    if 'shutdown' in self.path.lower():
         times = np.array(self.times)
         decay0 = self.powers[1] * np.exp(-0.1*times)
         decay1 = self.powers[1] * np.exp(-0.5*times)
         decay2 = self.powers[1] * np.exp(-1.0*times)
 
         ax: Axes = fig.add_subplot(1, 2, 1)
-        ax.semilogy(self.times, self.powers, "-*b", label="Power")
-        ax.semilogy(self.times, decay0, "r", label="Decay Rate 0")
-        ax.semilogy(self.times, decay1, "g", label="Decay Rate 1")
-        ax.semilogy(self.times, decay2, "k", label="Decay Rate 2")
+        ax.semilogy(self.times, self.powers, '-*b', label='Power')
+        ax.semilogy(self.times, decay0, 'r', label='Decay Rate 0')
+        ax.semilogy(self.times, decay1, 'g', label='Decay Rate 1')
+        ax.semilogy(self.times, decay2, 'k', label='Decay Rate 2')
         ax.set_ylim(bottom=1.0e-4)
         axs += [ax]
 
         ax: Axes = fig.add_subplot(1, 2, 2)
-        ax.plot(self.times[1:], self.powers[1:], "-*b", label="Power")
-        ax.plot(self.times[1:], decay0[1:], "r", label="Decay Rate 0")
-        ax.plot(self.times[1:], decay1[1:], "g", label="Decay Rate 1")
-        ax.plot(self.times[1:], decay2[1:], "k", label="Decay Rate 2")
+        ax.plot(self.times[1:], self.powers[1:], '-*b', label='Power')
+        ax.plot(self.times[1:], decay0[1:], 'r', label='Decay Rate 0')
+        ax.plot(self.times[1:], decay1[1:], 'g', label='Decay Rate 1')
+        ax.plot(self.times[1:], decay2[1:], 'k', label='Decay Rate 2')
         axs += [ax]
 
     else:
@@ -183,21 +186,22 @@ def plot_power(self: "SimulationReader", mode: int = 0,
 
         ax: Axes = fig.add_subplot(1, 1, 1)
         plotter = ax.plot if not log_scale else ax.semilogy
-        plotter(self.times, p, "-*b", label="Power")
+        plotter(self.times, p, '-*b', label='Power')
         axs += [ax]
 
     for ax in axs:
-        ax.set_xlabel("Time [sec]")
-        ax.set_ylabel("Power [arb. units]")
+        ax.set_xlabel('Time [sec]')
+        ax.set_ylabel('Power [arb. units]')
         ax.legend()
         ax.grid(True)
     fig.tight_layout()
 
 
-def plot_temperatures(self: "SimulationReader",
+def plot_temperatures(self: 'SimulationReader',
                       mode: int = 0,
                       log_scale: bool = False) -> None:
-    """Plot the temperature as a function of time.
+    """
+    Plot the temperature as a function of time.
 
     Parameters
     ----------
@@ -215,17 +219,18 @@ def plot_temperatures(self: "SimulationReader",
 
     fig: Figure = plt.figure()
     ax: Axes = fig.add_subplot(1, 1, 1)
-    ax.set_xlabel("Time [sec]")
-    ax.set_ylabel("Temperature [K]")
+    ax.set_xlabel('Time [sec]')
+    ax.set_ylabel('Temperature [K]')
     plotter = ax.semilogy if log_scale else ax.plot
-    plotter(self.times, T, "-*b")
+    plotter(self.times, T, '-*b')
     ax.grid(True)
     fig.tight_layout()
 
 
 @staticmethod
 def _format_subplots(n_plots: int) -> Tuple[int, int]:
-    """Determine the number of rows and columns for subplots.
+    """
+    Determine the number of rows and columns for subplots.
 
     Parameters
     ----------
@@ -243,5 +248,5 @@ def _format_subplots(n_plots: int) -> Tuple[int, int]:
                 n_rows = n
                 break
     else:
-        raise AssertionError("Maximum number of plots is 9.")
+        raise AssertionError('Maximum number of plots is 9.')
     return n_rows, n_cols

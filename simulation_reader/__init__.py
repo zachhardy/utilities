@@ -10,7 +10,8 @@ from pyPDEs.utilities import Vector
 
 
 class SimulationReader:
-    """A class for reading and handling transient neutronics data.
+    """
+    A class for reading and handling transient neutronics data.
     """
 
     from ._reader import (read_simulation_data,
@@ -48,7 +49,7 @@ class SimulationReader:
     def __init__(self, path: str) -> None:
         if not os.path.isdir(path):
             raise NotADirectoryError(
-                "The provided path is not a valid directory.")
+                'The provided path is not a valid directory.')
 
         self.path: str = os.path.abspath(path)
 
@@ -80,7 +81,8 @@ class SimulationReader:
         self.power_densities: ndarray = []
 
     def initialize_storage(self) -> None:
-        """Size all data vectors based on the macro-quantities.
+        """
+        Size all data vectors based on the macro-quantities.
         """
         T, N, C = self.n_snapshots, self.n_nodes, self.n_cells
         M, G, P = self.n_moments, self.n_groups, self.max_precursors
@@ -102,7 +104,8 @@ class SimulationReader:
         self.__init__(self.path)
 
     def _determine_dimension(self) -> None:
-        """Determine the spatial dimension.
+        """
+        Determine the spatial dimension.
         """
         grid = np.array([[p.x, p.y, p.z] for p in self.nodes])
         if np.sum(grid[:, :2]) == 0.0:

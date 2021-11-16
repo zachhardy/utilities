@@ -8,7 +8,8 @@ if TYPE_CHECKING:
 
 def create_simulation_matrix(self: "SimulationReader",
                              variables: List[str] = None) -> ndarray:
-    """Create a simulation matrix.
+    """
+    Create a simulation matrix.
 
     Parameters
     ----------
@@ -21,7 +22,7 @@ def create_simulation_matrix(self: "SimulationReader",
     ndarray (n_snapshots, varies)
     """
     if variables is None:
-        variables = ["flux_m0"]
+        variables = ['flux_m0']
     elif isinstance(variables, str):
         variables = [variables]
 
@@ -31,9 +32,10 @@ def create_simulation_matrix(self: "SimulationReader",
     return matrix
 
 
-def create_simulation_vector(self: "SimulationReader",
+def create_simulation_vector(self: 'SimulationReader',
                              variables: List[str] = None) -> ndarray:
-    """Create a simulation matrix.
+    """
+    Create a simulation matrix.
 
     Parameters
     ----------
