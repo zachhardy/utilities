@@ -9,14 +9,12 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
+from simulation_reader import SimulationReader
 
-class PRKEReader:
+
+class PRKEReader(SimulationReader):
     def __init__(self, path: str) -> None:
-        if not os.path.isdir(path):
-            raise NotADirectoryError(
-                'The provided path is not a valid directory.')
-
-        self.path: str = os.path.abspath(path)
+        super().__init__(path)
 
         self.n_snapshots: int = 0
         self.n_precursors: int = 0
@@ -39,9 +37,6 @@ class PRKEReader:
         self.fuel_temperatures = np.empty(T, dtype=float)
         self.coolant_temperatures = np.empty(T, dtype=float)
         self.precursors = np.empty((T, J), dtype=float)
-
-    def clear(self) -> None:
-        self.__init__(self.path)
 
     def read_simulation_data(self) -> None:
         """
@@ -195,16 +190,3 @@ class PRKEReader:
         ax.legend()
         ax.grid(True)
         plt.tight_layout()
-
-    @staticmethod
-    def read_double(file) -> float:
-        return struct.unpack('d', file.read(8))[0]
-
-
-    @staticmethod
-    def read_uint64_t(file) -> int:
-        return struct.unpack('Q', file.read(8))[0]
-
-    @staticmethod
-    def read_unsigned_int(file) -> int:
-        return struct.unpack('I', file.read(4))[0]
