@@ -31,6 +31,34 @@ class SimulationReader:
         raise NotImplementedError(
             f'{cls_name}.read_simulation_data must be implemented.')
 
+    def create_simulation_matrix(
+            self, variables: List[str] = None) -> ndarray:
+        cls_name = self.__class__.__name__
+        raise NotImplementedError(
+            f'{cls_name}.create_simulation_matrix must be implemented.')
+
+    def create_simulation_vector(
+            self, variables: List[str] = None) -> ndarray:
+        """
+        Create a simulation matrix.
+
+        Parameters
+        ----------
+        variables : List[str], default None
+            The variables to stack.
+
+        Returns
+        -------
+        ndarray (n_snapshots * varies,)
+        """
+        data = self.create_simulation_matrix(variables)
+        return data.reshape(data.size, 1)
+
+    def get_variable_by_key(self, key: str) -> ndarray:
+        cls_name = self.__class__.__name__
+        raise NotImplementedError(
+            f'{cls_name}.get_variable_by_key must be implemented.')
+
     def clear(self) -> None:
         self.__init__(self.path)
 
