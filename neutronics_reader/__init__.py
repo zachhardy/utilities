@@ -9,7 +9,7 @@ from typing import List, Tuple
 from pyPDEs.utilities import Vector
 
 
-class SimulationReader:
+class NeutronicsReader:
     """
     A class for reading and handling transient neutronics data.
     """

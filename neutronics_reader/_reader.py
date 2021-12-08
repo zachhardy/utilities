@@ -7,10 +7,10 @@ from pyPDEs.utilities import Vector
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from . import SimulationReader
+    from . import NeutronicsReader
 
 
-def read_simulation_data(self: 'SimulationReader') -> None:
+def read_simulation_data(self: 'NeutronicsReader') -> None:
     """
     Parse the binary files of a simulation.
     """
@@ -26,7 +26,7 @@ def read_simulation_data(self: 'SimulationReader') -> None:
 
         # Open snapshot file
         with open(path, mode='rb') as f:
-            f.read(1649)  # skip header
+            f.read(1699)  # skip header
 
             step = self.read_uint64_t(f)
 

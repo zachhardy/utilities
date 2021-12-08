@@ -5,7 +5,7 @@ from numpy import ndarray
 from typing import List
 
 from pyPDEs.utilities import Vector
-from simulation_reader import SimulationReader
+from neutronics_reader import NeutronicsReader
 
 
 class DatasetReader:
@@ -19,7 +19,7 @@ class DatasetReader:
                 'The provided path is not a valid directory.')
 
         self.path: str = os.path.abspath(path)
-        self.simulations : List[SimulationReader] = []
+        self.simulations : List[NeutronicsReader] = []
         self.parameters: ndarray = []
 
     def read_dataset(self) -> None:
@@ -34,7 +34,7 @@ class DatasetReader:
         for simulation_num, simulation in enumerate(entries):
             path = os.path.join(self.path, simulation)
             if os.path.isdir(path) and 'reference' not in path:
-                self.simulations.append(SimulationReader(path))
+                self.simulations.append(NeutronicsReader(path))
                 self.simulations[-1].read_simulation_data()
             elif simulation == 'params.txt':
                 params = np.loadtxt(path)

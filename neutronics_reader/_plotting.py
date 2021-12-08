@@ -6,10 +6,10 @@ from matplotlib.pyplot import Figure, Axes
 
 from typing import List, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
-    from . import SimulationReader
+    from . import NeutronicsReader
 
 
-def plot_power_densities(self: 'SimulationReader',
+def plot_power_densities(self: 'NeutronicsReader',
                          times: List[float] = None,
                          singular_normalization: bool = True) -> None:
     """
@@ -73,7 +73,7 @@ def plot_power_densities(self: 'SimulationReader',
         fig.tight_layout()
 
 
-def plot_temperature_profiles(self: 'SimulationReader',
+def plot_temperature_profiles(self: 'NeutronicsReader',
                               times: List[float]) -> None:
     """
     Plot temperatures at various times.
@@ -136,7 +136,7 @@ def plot_temperature_profiles(self: 'SimulationReader',
         fig.tight_layout()
 
 
-def plot_power(self: 'SimulationReader', mode: int = 0,
+def plot_power(self: 'NeutronicsReader', mode: int = 0,
                log_scale: bool = False) -> None:
     """
     Plot the power as a function of time.
@@ -197,7 +197,7 @@ def plot_power(self: 'SimulationReader', mode: int = 0,
     fig.tight_layout()
 
 
-def plot_temperatures(self: 'SimulationReader',
+def plot_temperatures(self: 'NeutronicsReader',
                       mode: int = 0,
                       log_scale: bool = False) -> None:
     """
