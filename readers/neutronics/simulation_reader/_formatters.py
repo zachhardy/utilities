@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from . import NeutronicsSimulationReader
 
 
-def create_simulation_matrix(self: "NeutronicsSimulationReader",
+def create_simulation_matrix(self: 'NeutronicsSimulationReader',
                              variables: List[str] = None) -> ndarray:
     """
     Create a simulation matrix.
@@ -30,22 +30,3 @@ def create_simulation_matrix(self: "NeutronicsSimulationReader",
         tmp = self.get_variable_by_key(var)
         matrix = tmp if v == 0 else np.hstack((matrix, tmp))
     return matrix
-
-
-def create_simulation_vector(self: 'NeutronicsSimulationReader',
-                             variables: List[str] = None) -> ndarray:
-    """
-    Create a simulation matrix.
-
-    Parameters
-    ----------
-    variables : List[str], default None
-        The variables to stack. The default behavior stacks
-        only the groupwise scalar flux values.
-
-    Returns
-    -------
-    ndarray (n_snapshots * varies,)
-    """
-    data = self.create_simulation_matrix(variables)
-    return data.reshape(data.size, 1)

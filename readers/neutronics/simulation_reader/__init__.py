@@ -25,8 +25,7 @@ class NeutronicsSimulationReader(SimulationReader):
                            _interpolate,
                            _validate_times)
 
-    from ._formatters import (create_simulation_matrix,
-                              create_simulation_vector)
+    from ._formatters import create_simulation_matrix
 
     from ._plotting import (plot_power,
                             plot_temperatures,
