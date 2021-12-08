@@ -12,6 +12,13 @@ from ...base import SimulationReader
 
 
 class PRKESimulationReader(SimulationReader):
+
+    from ._plotters import (plot_powers,
+                            plot_precursors,
+                            plot_fuel_temperatures,
+                            plot_coolant_temperatures,
+                            plot_results)
+
     def __init__(self, path: str) -> None:
         super().__init__(path)
 
@@ -76,114 +83,43 @@ class PRKESimulationReader(SimulationReader):
                     precursor = self.read_unsigned_int(f)
                     self.precursors[step, precursor] = self.read_double(f)
 
-    def plot_results(self, log_scale: bool = True) -> None:
+    def get_variable_by_key(self, key: str) -> ndarray:
+        if key == 'power':
+            return self.powers.reshape(-1, 1)
+        elif key == 'fuel_temperature':
+            return self.fuel_temperatures.reshape(-1, 1)
+        elif key == 'coolant_temperature':
+            return self.coolant_temperatures.reshape(-1, 1)
+        elif 'precursors' in key:
+            if key == 'precursors':
+                return self.precursors
+            elif 'j' in key:
+                j = int(key[key.find('j') + 1])
+                return self.precursors[:, j].reshape(-1, 1)
+
+    def create_simulation_matrix(
+            self, variables: List[str] = None) -> ndarray:
         """
-        Plot all results.
+        Create a simulation matrix.
 
         Parameters
         ----------
-        log_scale : bool
+        variables : List[str], default None
+            The variables to stack. The default behavior
+            stacks all unknowns
+
+        Returns
+        -------
+        ndarray (n_snapshots, varies)
         """
-        fig: Figure = plt.figure()
-        fig.suptitle('PRKE Results', fontsize=12)
+        if isinstance(variables, str):
+            variables = [variables]
+        elif variables is None:
+            variables = ['power', 'precursors',
+                         'fuel_temperature',
+                         'coolant_temperature']
 
-        # Plot power
-        ax: Axes = fig.add_subplot(2, 2, 1)
-        ax.set_ylabel('Power (W)', fontsize=12)
-        plotter = ax.semilogy if log_scale else ax.plot
-        plotter(self.times, self.powers, '-b*')
-        ax.grid(True)
-
-        # Plot precursors
-        ax: Axes = fig.add_subplot(2, 2, 2)
-        ax.set_ylabel('$C_{j}$ ($m^{-3})$', fontsize=12)
-        for j in range(self.n_precursors):
-            cj = self.precursors[:, j]
-            ax.plot(self.times, cj, '-*', label=f'Precursor {j}')
-        ax.legend()
-        ax.grid(True)
-
-        # Plot fuel temperature
-        ax: Axes = fig.add_subplot(2, 2, 3)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('$T_{fuel}$ (K)', fontsize=12)
-        ax.plot(self.times, self.fuel_temperatures, '-b*')
-        ax.grid(True)
-
-        # Plot coolant temperature
-        ax: Axes = fig.add_subplot(2, 2, 4)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('$T_{coolant}$ (K)', fontsize=12)
-        ax.plot(self.times, self.coolant_temperatures, '-b*')
-        ax.grid(True)
-
-        plt.tight_layout()
-
-    def plot_powers(self, log_scale: bool = True) -> None:
-        """
-        Plot the system power as a function of time.
-
-        Parameters
-        ----------
-        log_scale : bool, default False
-            Flag for logscale y-axis
-        """
-        fig: Figure = plt.figure()
-        ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('Power (W)', fontsize=12)
-        plotter = ax.semilogy if log_scale else ax.plot
-        plotter(self.times, self.powers, '-b*')
-        ax.grid(True)
-        plt.tight_layout()
-
-    def plot_fuel_temperatures(self) -> None:
-        """
-        Plot the fuel temperature as a function of time.
-        """
-        fig: Figure = plt.figure()
-        ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('Fuel Temperature (K)', fontsize=12)
-        ax.plot(self.times, self.fuel_temperatures, '-b*')
-        ax.grid(True)
-        plt.tight_layout()
-
-    def plot_coolant_temperatures(self) -> None:
-        """
-        Plot the fuel temperature as a function of time.
-        """
-        fig: Figure = plt.figure()
-        ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('Coolant Temperature (K)', fontsize=12)
-        ax.plot(self.times, self.coolant_temperatures, '-b*')
-        ax.grid(True)
-        plt.tight_layout()
-
-    def plot_precursors(self, precursor_nums: List[int] = None) -> None:
-        """
-        Plot the precursors as a function of time.
-
-        Parameters
-        ----------
-        precursor_nums : List[int], default None
-            The precursor indices to plot
-        """
-        if precursor_nums is None:
-            precursor_nums = [list(range(self.n_precursors))]
-        elif isinstance(precursor_nums, int):
-            precursor_nums = [precursor_nums]
-        if not isinstance(precursor_nums, list):
-            raise ValueError('precursors must be a list of indices.')
-
-        fig: Figure = plt.figure()
-        ax: Axes = fig.add_subplot(1, 1, 1)
-        ax.set_xlabel('Time (sec)', fontsize=12)
-        ax.set_ylabel('Precursor Concentration ($m^{-3}$)', fontsize=12)
-        for j in precursor_nums:
-            cj = self.precursors[:, j]
-            ax.plot(self.times, cj, label=f'Precursor {j}')
-        ax.legend()
-        ax.grid(True)
-        plt.tight_layout()
+        for v, var in enumerate(variables):
+            tmp = self.get_variable_by_key(var)
+            matrix = tmp if v == 0 else np.hstack((matrix, tmp))
+        return matrix
