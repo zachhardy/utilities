@@ -1,15 +1,14 @@
 import os
-import struct
 
 import numpy as np
 from numpy import ndarray
-from typing import List, Tuple
+from typing import List
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
-from simulation_reader import SimulationReader
+from readers.base.simulation_reader import SimulationReader
 
 
 class PRKEReader(SimulationReader):
@@ -77,7 +76,7 @@ class PRKEReader(SimulationReader):
                     precursor = self.read_unsigned_int(f)
                     self.precursors[step, precursor] = self.read_double(f)
 
-    def plot_results(self, log_scale: bool = False) -> None:
+    def plot_results(self, log_scale: bool = True) -> None:
         """
         Plot all results.
 
@@ -120,9 +119,7 @@ class PRKEReader(SimulationReader):
 
         plt.tight_layout()
 
-
-
-    def plot_powers(self, log_scale: bool = False) -> None:
+    def plot_powers(self, log_scale: bool = True) -> None:
         """
         Plot the system power as a function of time.
 

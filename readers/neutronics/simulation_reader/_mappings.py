@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from . import NeutronicsReader
+    from . import NeutronicsSimulationReader
 
 
-def map_phi_dof(self: 'NeutronicsReader',
+def map_phi_dof(self: 'NeutronicsSimulationReader',
                 cell_id: int, node: int,
                 moment: int, group: int) -> int:
     """
@@ -32,7 +32,7 @@ def map_phi_dof(self: 'NeutronicsReader',
     M, G = self.n_moments, self.n_groups
     return cell_id * N * M *G + node * M *G + moment *G + group
 
-def map_precursor_dof(self: 'NeutronicsReader',
+def map_precursor_dof(self: 'NeutronicsSimulationReader',
                       cell_id: int, precursor: int) -> int:
     """
     Get a delayed neutron precursor DoF.

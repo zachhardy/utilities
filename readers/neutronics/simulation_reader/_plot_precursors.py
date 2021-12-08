@@ -5,10 +5,10 @@ from matplotlib.pyplot import Figure, Axes
 
 from typing import List, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
-    from . import NeutronicsReader
+    from . import NeutronicsSimulationReader
 
 
-def plot_precursors(self: 'NeutronicsReader',
+def plot_precursors(self: 'NeutronicsSimulationReader',
                     species: List[Tuple[int, int]],
                     times: List[float] = None) -> None:
     """

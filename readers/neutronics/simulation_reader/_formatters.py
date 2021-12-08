@@ -3,10 +3,10 @@ from numpy import ndarray
 
 from typing import TYPE_CHECKING, List
 if TYPE_CHECKING:
-    from . import NeutronicsReader
+    from . import NeutronicsSimulationReader
 
 
-def create_simulation_matrix(self: "NeutronicsReader",
+def create_simulation_matrix(self: "NeutronicsSimulationReader",
                              variables: List[str] = None) -> ndarray:
     """
     Create a simulation matrix.
@@ -32,7 +32,7 @@ def create_simulation_matrix(self: "NeutronicsReader",
     return matrix
 
 
-def create_simulation_vector(self: 'NeutronicsReader',
+def create_simulation_vector(self: 'NeutronicsSimulationReader',
                              variables: List[str] = None) -> ndarray:
     """
     Create a simulation matrix.
@@ -49,11 +49,3 @@ def create_simulation_vector(self: 'NeutronicsReader',
     """
     data = self.create_simulation_matrix(variables)
     return data.reshape(data.size, 1)
-
-
-
-
-
-
-
-

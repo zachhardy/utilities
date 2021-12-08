@@ -1,16 +1,13 @@
-import os
-import struct
-
 import numpy as np
 
 from numpy import ndarray
-from typing import List, Tuple
+from typing import List
 
 from pyPDEs.utilities import Vector
-from simulation_reader import SimulationReader
+from readers.base.simulation_reader import SimulationReader
 
 
-class NeutronicsReader(SimulationReader):
+class NeutronicsSimulationReader(SimulationReader):
     """
     A class for reading and handling transient neutronics data.
     """
@@ -48,7 +45,6 @@ class NeutronicsReader(SimulationReader):
         super().__init__(path)
 
         self.dim: int = 0
-        self.n_snapshots: int = 0
         self.n_cells: int = 0
         self.n_nodes: int = 0
         self.nodes_per_cell: int = 0

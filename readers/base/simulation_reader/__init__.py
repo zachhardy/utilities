@@ -19,6 +19,7 @@ class SimulationReader:
                 'The provided path is not a valid directory.')
 
         self.path: str = os.path.abspath(path)
+        self.n_snapshots: int = 0
 
     def initialize_storage(self) -> None:
         cls_name = self.__class__.__name__

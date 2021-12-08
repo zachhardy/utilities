@@ -3,10 +3,10 @@ from numpy import ndarray
 
 from typing import TYPE_CHECKING, Tuple, List, Union
 if TYPE_CHECKING:
-    from . import NeutronicsReader
+    from . import NeutronicsSimulationReader
 
 
-def get_flux_moment(self: 'NeutronicsReader',
+def get_flux_moment(self: 'NeutronicsSimulationReader',
                     moment: int, times: List[float]) -> ndarray:
     """
     Get flux moment `m` at time `t`.
@@ -38,7 +38,7 @@ def get_flux_moment(self: 'NeutronicsReader',
     return vals
 
 
-def get_group_flux_moment(self: 'NeutronicsReader', moment: int,
+def get_group_flux_moment(self: 'NeutronicsSimulationReader', moment: int,
                           group: int, times: List[float]) -> ndarray:
     """
     Get group `g` flux moment `m` and time `t`.
@@ -72,7 +72,7 @@ def get_group_flux_moment(self: 'NeutronicsReader', moment: int,
     return vals
 
 
-def get_precursor_species(self: 'NeutronicsReader',
+def get_precursor_species(self: 'NeutronicsSimulationReader',
                           species: Tuple[int, int],
                           times: List[float]) -> ndarray:
     """
@@ -103,7 +103,7 @@ def get_precursor_species(self: 'NeutronicsReader',
     return vals
 
 
-def get_power_densities(self: 'NeutronicsReader',
+def get_power_densities(self: 'NeutronicsSimulationReader',
                         times: List[float]) -> ndarray:
     """
     Get the power densities at the providied times.
@@ -120,7 +120,7 @@ def get_power_densities(self: 'NeutronicsReader',
     return self._interpolate(times, self.power_densities)
 
 
-def get_temperatures(self: 'NeutronicsReader',
+def get_temperatures(self: 'NeutronicsSimulationReader',
                      times: List[float]) -> ndarray:
     """
     Get the temperatures at the providied times.
@@ -137,7 +137,7 @@ def get_temperatures(self: 'NeutronicsReader',
     return self._interpolate(times, self.temperatures)
 
 
-def _interpolate(self: 'NeutronicsReader',
+def _interpolate(self: 'NeutronicsSimulationReader',
                  times: List[float], data: ndarray) -> ndarray:
     """
     Interpolate at a specified time.
@@ -168,7 +168,7 @@ def _interpolate(self: 'NeutronicsReader',
     return vals
 
 
-def get_variable_by_key(self: 'NeutronicsReader', key: str) -> ndarray:
+def get_variable_by_key(self: 'NeutronicsSimulationReader', key: str) -> ndarray:
     """
     Get a variable by its name.
 
@@ -197,7 +197,7 @@ def get_variable_by_key(self: 'NeutronicsReader', key: str) -> ndarray:
         return self.get_power_densities(self.times)
 
 
-def _validate_times(self: 'NeutronicsReader',
+def _validate_times(self: 'NeutronicsSimulationReader',
                     times: List[float]) -> List[float]:
     """
     Ensure the plotting times are valid.

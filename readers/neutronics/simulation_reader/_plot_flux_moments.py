@@ -5,12 +5,12 @@ from matplotlib.pyplot import Figure, Axes
 
 from typing import List, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
-    from . import NeutronicsReader
+    from . import NeutronicsSimulationReader
 
 phi_label = r"$\phi_{m,g}(r)$ [$\frac{n}{cm^{2}~s}$]"
 
 
-def plot_flux_moments(self: "NeutronicsReader",
+def plot_flux_moments(self: "NeutronicsSimulationReader",
                       moment: int, groups: List[int] = None,
                       times: List[float] = None) -> None:
     """Plot groupwise flux moments at various times.
@@ -41,7 +41,7 @@ def plot_flux_moments(self: "NeutronicsReader",
     elif self.dim == 2:
         self._plot_2d_flux_moments(moment, groups, times)
 
-def _plot_1d_flux_moments(self: "NeutronicsReader",
+def _plot_1d_flux_moments(self: "NeutronicsSimulationReader",
                           moment: int, groups: List[int],
                           times: List[float]) -> None:
     """Plot 1D groupwise flux moments at various times.
@@ -82,7 +82,7 @@ def _plot_1d_flux_moments(self: "NeutronicsReader",
         fig.tight_layout()
 
 
-def _plot_2d_flux_moments(self: "NeutronicsReader",
+def _plot_2d_flux_moments(self: "NeutronicsSimulationReader",
                           moment: int, groups: List[int],
                           times: List[float]) -> None:
     """Plot 2D groupwise flux moments at various times.
