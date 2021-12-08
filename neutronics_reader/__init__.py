@@ -7,17 +7,15 @@ from numpy import ndarray
 from typing import List, Tuple
 
 from pyPDEs.utilities import Vector
+from simulation_reader import SimulationReader
 
 
-class NeutronicsReader:
+class NeutronicsReader(SimulationReader):
     """
     A class for reading and handling transient neutronics data.
     """
 
-    from ._reader import (read_simulation_data,
-                          read_uint64_t,
-                          read_unsigned_int,
-                          read_double)
+    from ._reader import read_simulation_data
 
     from ._mappings import map_phi_dof, map_precursor_dof
 
@@ -47,11 +45,7 @@ class NeutronicsReader:
 
 
     def __init__(self, path: str) -> None:
-        if not os.path.isdir(path):
-            raise NotADirectoryError(
-                'The provided path is not a valid directory.')
-
-        self.path: str = os.path.abspath(path)
+        super().__init__(path)
 
         self.dim: int = 0
         self.n_snapshots: int = 0
@@ -99,9 +93,6 @@ class NeutronicsReader:
         self.precursors = np.empty((T, C * P), dtype=float)
         self.temperatures = np.empty((T, C), dtype=float)
         self.power_densities = np.empty((T, C), dtype=float)
-
-    def clear(self) -> None:
-        self.__init__(self.path)
 
     def _determine_dimension(self) -> None:
         """

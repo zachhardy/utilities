@@ -142,18 +142,3 @@ def read_simulation_data(self: 'NeutronicsReader') -> None:
 
     self.times = np.array(self.times)
     self._determine_dimension()
-
-
-@staticmethod
-def read_double(file) -> float:
-    return struct.unpack('d', file.read(8))[0]
-
-
-@staticmethod
-def read_uint64_t(file) -> int:
-    return struct.unpack('Q', file.read(8))[0]
-
-
-@staticmethod
-def read_unsigned_int(file) -> int:
-    return struct.unpack('I', file.read(4))[0]
