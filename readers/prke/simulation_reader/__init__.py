@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 
-from readers.base.simulation_reader import SimulationReader
+from ...base import SimulationReader
 
 
-class PRKEReader(SimulationReader):
+class PRKESimulationReader(SimulationReader):
     def __init__(self, path: str) -> None:
         super().__init__(path)
 
