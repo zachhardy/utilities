@@ -4,7 +4,7 @@ import numpy as np
 from numpy import ndarray
 from typing import List
 
-from ..simulation_reader import SimulationReader
+from .. import SimulationReader
 
 
 class DatasetReader:

@@ -5,8 +5,8 @@ from typing import List
 
 from pyPDEs.utilities import Vector
 
-from readers.base.dataset_reader import DatasetReader
-from readers.neutronics.simulation_reader import NeutronicsSimulationReader
+from ...base import DatasetReader
+from .. import NeutronicsSimulationReader
 
 
 class NeutronicsDatasetReader(DatasetReader):
@@ -72,6 +72,3 @@ class NeutronicsDatasetReader(DatasetReader):
     @property
     def material_ids(self) -> List[int]:
         return self.simulations[0].material_ids
-
-    def clear(self) -> None:
-        self.__init__(self.path)
