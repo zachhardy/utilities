@@ -33,9 +33,28 @@ class SimulationReader:
 
     def create_simulation_matrix(
             self, variables: List[str] = None) -> ndarray:
-        cls_name = self.__class__.__name__
-        raise NotImplementedError(
-            f'{cls_name}.create_simulation_matrix must be implemented.')
+        """
+        Create a simulation matrix.
+
+        Parameters
+        ----------
+        variables : List[str], default None
+            The variables to stack. The default behavior is
+            governed by the ``default_variables'' routine.
+
+        Returns
+        -------
+        ndarray (n_snapshots, varies)
+        """
+        if isinstance(variables, str):
+            variables = [variables]
+        elif variables is None:
+            variables = self.default_variables()
+
+        for v, var in enumerate(variables):
+            tmp = self.get_variable_by_key(var)
+            matrix = tmp if v == 0 else np.hstack((matrix, tmp))
+        return matrix
 
     def create_simulation_vector(
             self, variables: List[str] = None) -> ndarray:
@@ -53,6 +72,11 @@ class SimulationReader:
         """
         data = self.create_simulation_matrix(variables)
         return data.reshape(data.size, 1)
+
+    def default_variables(self) -> List[str]:
+        cls_name = self.__class__.__name__
+        raise NotImplementedError(
+            f'{cls_name}.default_variables must be implemented.')
 
     def get_variable_by_key(self, key: str) -> ndarray:
         cls_name = self.__class__.__name__

@@ -83,7 +83,23 @@ class PRKESimulationReader(SimulationReader):
                     precursor = self.read_unsigned_int(f)
                     self.precursors[step, precursor] = self.read_double(f)
 
+    def default_variables(self) -> List[str]:
+        return ['power', 'precursors',
+                'fuel_temperature',
+                'coolant_temperature']
+
     def get_variable_by_key(self, key: str) -> ndarray:
+        """
+        Get the values of a variable based on its key.
+
+        Parameters
+        ----------
+        key : str
+
+        Returns
+        -------
+        ndarray (n_snapshots, varies)
+        """
         if key == 'power':
             return self.powers.reshape(-1, 1)
         elif key == 'fuel_temperature':
@@ -96,30 +112,3 @@ class PRKESimulationReader(SimulationReader):
             elif 'j' in key:
                 j = int(key[key.find('j') + 1])
                 return self.precursors[:, j].reshape(-1, 1)
-
-    def create_simulation_matrix(
-            self, variables: List[str] = None) -> ndarray:
-        """
-        Create a simulation matrix.
-
-        Parameters
-        ----------
-        variables : List[str], default None
-            The variables to stack. The default behavior
-            stacks all unknowns
-
-        Returns
-        -------
-        ndarray (n_snapshots, varies)
-        """
-        if isinstance(variables, str):
-            variables = [variables]
-        elif variables is None:
-            variables = ['power', 'precursors',
-                         'fuel_temperature',
-                         'coolant_temperature']
-
-        for v, var in enumerate(variables):
-            tmp = self.get_variable_by_key(var)
-            matrix = tmp if v == 0 else np.hstack((matrix, tmp))
-        return matrix

@@ -25,8 +25,6 @@ class NeutronicsSimulationReader(SimulationReader):
                            _interpolate,
                            _validate_times)
 
-    from ._formatters import create_simulation_matrix
-
     from ._plotting import (plot_power,
                             plot_temperatures,
                             plot_power_densities,
@@ -88,6 +86,9 @@ class NeutronicsSimulationReader(SimulationReader):
         self.precursors = np.empty((T, C * P), dtype=float)
         self.temperatures = np.empty((T, C), dtype=float)
         self.power_densities = np.empty((T, C), dtype=float)
+
+    def default_variables(self) -> List[str]:
+        return ['flux_m0']
 
     def _determine_dimension(self) -> None:
         """

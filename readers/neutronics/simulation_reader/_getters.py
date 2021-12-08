@@ -158,8 +158,6 @@ def _interpolate(self: 'NeutronicsSimulationReader',
     vals = np.zeros((len(times), data.shape[1]))
     for t, time in enumerate(times):
         dt = np.diff(self.times)[0]
-        # print(time)
-        # print(np.floor(time/dt), np.ceil(time/dt))
         i = [int(np.floor(time/dt)), int(np.ceil(time/dt))]
         w = [i[1] - time/dt, time/dt - i[0]]
         if i[0] == i[1]:
@@ -168,7 +166,8 @@ def _interpolate(self: 'NeutronicsSimulationReader',
     return vals
 
 
-def get_variable_by_key(self: 'NeutronicsSimulationReader', key: str) -> ndarray:
+def get_variable_by_key(
+        self: 'NeutronicsSimulationReader', key: str) -> ndarray:
     """
     Get a variable by its name.
 
